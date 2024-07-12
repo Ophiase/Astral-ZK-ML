@@ -1,16 +1,16 @@
-use celestial_zkml::math;
-use celestial_zkml::math::signed::{
+use astral_zkml::math;
+use astral_zkml::math::signed::{
     I128SignedBasics, unsigned_to_signed, felt_to_i128, I128Div, I128Display,
 };
-use celestial_zkml::math::wfloat::{
+use astral_zkml::math::wfloat::{
     WFloat, WFloatBasics,
     ZERO_WFLOAT, ONE_WFLOAT, NEG_WFLOAT, HALF_WFLOAT, DECIMAL_WFLOAT, 
 };
 
-use celestial_zkml::math::vector::{
+use astral_zkml::math::vector::{
     Vector, VectorBasics
 };
-use celestial_zkml::math::matrix::{
+use astral_zkml::math::matrix::{
     Matrix, MatrixBasics
 };
 

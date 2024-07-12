@@ -1,4 +1,4 @@
-# Celestial-ZK-ML
+# Astral-ZK-ML
 
 Sponsorized by ETH Bruxelles Contest ⚡️
 

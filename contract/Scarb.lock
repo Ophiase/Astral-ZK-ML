@@ -2,5 +2,5 @@
 version = 1
 
 [[package]]
-name = "celestial_zkml"
+name = "astral_zkml"
 version = "0.1.0"

@@ -404,19 +404,129 @@ pub impl MatrixBasics of IMatrixBasics {
         Matrix { content: result.span() }
     }
 
-    // fn mul_vector(self : @Matrix, vector : @Vector) -> Vector {
-    //     let (dimX, dimY) = self.shape();
-    //     let result = VectorBasics::zero(dimX);
+    fn dot_vector(self : @Matrix, vector : @Vector) -> Vector {
+        let (_, dimY) = self.shape();
+        assert!(dimY == vector.len(), "dimension mismatch");
 
-    //     let mut i = 0;
-    //     loop {
-    //         if i == vector.len() { break(); }
-    //         let current = *vector.at(i);
+        let mut result = ArrayTrait::new();
+
+        let mut i = 0;
+        loop {
+            if i == vector.len() { break(); }
             
+            let current = self.get_ith_line(i);
+            result.append( current.dot(vector) );
             
-    //         i += 1;
-    //     };
-    // }
+            i += 1;
+        };
+
+        Vector { content : result.span() }
+    }
     
-    // fn naive_dot(self : @Matrix, @Matrix) -> Matrix
+    // fn naive_dot(self : @Matrix, @Matrix) -> Matrix {
+    //     let 
+    // }
+
+
+    // returns (A[where:], A[:where])
+    fn vertical_split(self: @Matrix, where : usize) -> (Matrix, Matrix) {
+        let mut left = ArrayTrait::new();
+        let mut right = ArrayTrait::new();
+        let mut i = 0;
+        loop {
+            if i == (*self).content.len() { break(); }
+            
+            let current = self.get_ith_line(i);
+            if i <= where {
+                left.append(current);
+            } else {
+                right.append(current);
+            }
+            
+            i += 1;
+        };
+
+        (
+            Matrix { content : left.span() },
+            Matrix { content : right.span() }
+        )
+    }
+
+    fn horizontal_split(self: @Matrix, where : usize) -> (Matrix, Matrix) {
+        let (dimX, dimY) = self.shape();
+        
+        let mut left = ArrayTrait::new();
+        let mut right = ArrayTrait::new();
+        let mut i = 0;
+        loop {
+            if i == dimX { break(); }
+            
+            let mut sub_left = ArrayTrait::new();
+            let mut sub_right = ArrayTrait::new();
+
+            let mut j = 0;
+            loop {
+                if j ==  dimY { break(); }
+                
+                let current = self.get_ith_line(i);
+                if i <= where {
+                    left.append(current);
+                } else {
+                    right.append(current);
+                }
+
+                j += 1;
+            };
+
+            left.append(Vector { content: sub_left.span() });
+            right.append(Vector { content: sub_right.span() });
+            
+            i += 1;
+        };
+
+        (
+            Matrix { content : left.span() },
+            Matrix { content : right.span() }
+        )
+    }
+ 
+    // def matrix_multiply(A, B):
+    // n = len(A)
+    // if n == 1:
+    //     return [[A[0][0] * B[0][0]]]
+    
+    // # Diviser les matrices en sous-matrices
+    // mid = n // 2
+    // A11 = [row[:mid] for row in A[:mid]]
+    // A12 = [row[mid:] for row in A[:mid]]
+    // A21 = [row[:mid] for row in A[mid:]]
+    // A22 = [row[mid:] for row in A[mid:]]
+    
+    // B11 = [row[:mid] for row in B[:mid]]
+    // B12 = [row[mid:] for row in B[:mid]]
+    // B21 = [row[:mid] for row in B[mid:]]
+    // B22 = [row[mid:] for row in B[mid:]]
+    
+    // # Calculer récursivement les sous-produits
+    // C11 = matrix_add(matrix_multiply(A11, B11), matrix_multiply(A12, B21))
+    // C12 = matrix_add(matrix_multiply(A11, B12), matrix_multiply(A12, B22))
+    // C21 = matrix_add(matrix_multiply(A21, B11), matrix_multiply(A22, B21))
+    // C22 = matrix_add(matrix_multiply(A21, B12), matrix_multiply(A22, B22))
+    
+    // # Combiner les résultats
+    // C = C11 + C12 + C21 + C22
+    // return [C[i] + C[i+n] for i in range(n)]
+
+    // fn dot(self : @Matrix, rhs : @Matrix) -> Matrix {
+    //     let n = (*self).content.len();
+    //     if n == 1 {
+    //         return self.at(0, 0) * rhs.at(0, 0);
+    //     }
+
+
+
+    //     let mid = n / 2;
+
+
+    // }
 }
