@@ -4,6 +4,7 @@ pub mod algebra;
 // BASIC MATH
 pub mod signed;
 pub mod wfloat;
+pub mod function;
 
 // LEARN ALGEBRA
 pub mod component_lambda;

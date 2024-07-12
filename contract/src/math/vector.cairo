@@ -18,7 +18,9 @@ use super::component_lambda::{
     RawFeltAsWFloat, RawI128AsWFloat, I128AsWFloat, U128AsWFloat, WFloatAsRawFelt,
     WFloatMultiplier
 };
-
+use super::function::{
+    sqrt
+};
 
 use super::algebra::{
     NeutralElement, Invertible,
@@ -219,12 +221,12 @@ pub impl VectorBasics of IVectorBasics {
     }
 
     #[inline]
-    fn one(size: usize) -> Vector {
+    fn ones(size: usize) -> Vector {
         VectorBasics::fill(size, @ONE_WFLOAT)
     }
 
     #[inline]
-    fn zero(size: usize) -> Vector {
+    fn zeros(size: usize) -> Vector {
         VectorBasics::fill(size, @ZERO_WFLOAT)
     }
 
@@ -336,9 +338,28 @@ pub impl VectorBasics of IVectorBasics {
     // Misc
     // -------------------------------------------------
 
+    fn sum(self: @Vector) -> WFloat {
+        let mut result = ZERO_WFLOAT;
+        let mut i = 0;
+        loop {
+            if i == self.len() { break(); }
+            result = result + self.at(i);            
+            i += 1;
+        };
+        result
+    }
+
     #[inline]
     fn scale(self: @Vector, factor : WFloat) -> Vector {
         self.apply( WFloatMultiplier { factor: factor } )
+    }
+
+    fn dot(self: @Vector, rhs : @Vector) -> WFloat {
+        (*self * *rhs).sum()
+    }
+
+    fn norm(self: @Vector) -> WFloat {
+        sqrt(self.dot(self))
     }
 
     // fn pow_monoid

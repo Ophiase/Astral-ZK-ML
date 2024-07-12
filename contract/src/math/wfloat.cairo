@@ -26,12 +26,14 @@ pub struct WFloat {
 pub const WFLOAT_POW: usize = 6;
 pub const NEG_WFLOAT_AS_I128: i128 = -1_000_000; // 1e6 instead of  1e18
 pub const ONE_WFLOAT_AS_I128: i128 = 1_000_000; // 1e6 instead of  1e18
+pub const TWO_WFLOAT_AS_I128: i128 = 2_000_000; // 1e6 instead of  1e18
 pub const HALF_WFLOAT_AS_I128: i128 = 500_000; // 0.5e6 instead of 0.5e18
 pub const DECIMAL_WFLOAT_AS_I128: i128 = 100_000; // 0.1e6 instead of
 
 pub const ZERO_WFLOAT : WFloat = WFloat { value: 0 };
 pub const NEG_WFLOAT : WFloat = WFloat { value: NEG_WFLOAT_AS_I128 };
 pub const ONE_WFLOAT : WFloat = WFloat { value: ONE_WFLOAT_AS_I128 };
+pub const TWO_WFLOAT : WFloat = WFloat { value: TWO_WFLOAT_AS_I128 };
 pub const HALF_WFLOAT : WFloat = WFloat { value : HALF_WFLOAT_AS_I128 };
 pub const DECIMAL_WFLOAT : WFloat = WFloat { value : DECIMAL_WFLOAT_AS_I128 };
 

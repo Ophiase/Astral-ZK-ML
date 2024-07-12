@@ -50,7 +50,7 @@ fn matrix_to_string(matrix: @Matrix) -> ByteArray {
     result
 }
 
-pub impl MatrixDispalay of Display<Matrix> {
+pub impl MatrixDisplay of Display<Matrix> {
     fn fmt(self: @Matrix, ref f: Formatter) -> Result<(), Error> {
         write!(f, "{}", matrix_to_string(self))
     }

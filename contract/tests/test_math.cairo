@@ -69,12 +69,20 @@ fn vector_works() -> () {
         v6 == VectorBasics::from_i128(@array![200_i128, 750,  3600].span()), 
         "v6 wrong value"
     );
+
+    // println!("{}",
+    //     VectorBasics::ones(2).norm()
+    // );
+
+    // println!("{}",
+    //     VectorBasics::from_i128(@array![2_i128, 3, 0].span()).norm()
+    // );
 }
 
 #[test]
 fn matrix_works() -> () {
     let m1 = MatrixBasics::identity((3,3));
-    println!("{m1}");
+    // println!("{m1}");
     // sep();
 
     let m2 = MatrixBasics::from_i128(@array![
@@ -82,7 +90,7 @@ fn matrix_works() -> () {
         array![1_i128, 1, 0].span(),
         array![1_i128, 0, 3].span(),
     ].span());
-    println!("{m2}");
+    // println!("{m2}");
     // sep();
     
     let m3 = MatrixBasics::from_i128(@array![
@@ -91,8 +99,6 @@ fn matrix_works() -> () {
         array![1_i128, 0, 2].span(),
     ].span());
     // println!("{m3}");
-
-
     
     // sep();
     // println!("{} +\n {} =\n {}", m1, m2, m1 + m2);
@@ -102,4 +108,6 @@ fn matrix_works() -> () {
 
     // sep();
     // println!("{} x\n {} =\n {}", m2, m3, m2 * m3);
+
+    let _ = m1 + m2 + m3;
 }
