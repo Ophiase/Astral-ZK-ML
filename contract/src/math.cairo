@@ -1,9 +1,9 @@
 // GENERAL INTERFACE
-// pub mod algebra;
+pub mod algebra;
 
 // BASIC MATH
-// pub mod signed;
-// pub mod wfloat;
+pub mod signed;
+pub mod wfloat;
 
 // LEARN ALGEBRA
 // pub mod component_lambda;
