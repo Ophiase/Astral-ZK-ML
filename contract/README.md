@@ -1,5 +1,27 @@
 # Smart Contracts
 
+- ## Fully Decentralized Contract
+    - TODO
+- ## Country-Wise Decentralized Contract
+    - TODO
+- ## ZKML
+    - ✅ MultiLayer Perceptron (Neural Network)
+        - Implemented examples 
+            - Star type predictions.
+                - [Kaggle DataSet](https://www.kaggle.com/datasets/deepu1109/star-dataset)
+    - ❌ Convolutional Neural Network
+        - Requires to implements the following layers
+            - Flatten, Conv2D, MaxPooling
+        - Add the following examples :
+            - Crater identification (availible datasets on kaggle)
+    - ❌ Graph Attention Network (Neural Network)
+        - Cannot be implemented on regular pipe
+            - pipe : Labeled_Graph_Input $\to \dots \to$ Labeled_Graph $\to \dots \to$ Integer
+        - Add the following examples :
+            - Constellation identification
+                - Requires a first model to extrapolate stars positions and size.
+                - Normalized graph labeled with distances and star sizes.
+
 ## Installation
 
 Requires : Scarb, Cairo
