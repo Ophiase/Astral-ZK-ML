@@ -6,9 +6,9 @@ pub mod signed;
 pub mod wfloat;
 
 // LEARN ALGEBRA
-// pub mod component_lambda;
-// pub mod vector;
-// pub mod matrix;
+pub mod component_lambda;
+pub mod vector;
+pub mod matrix;
 
 // DATA SCIENCE MODULES
 // pub mod statistics;
