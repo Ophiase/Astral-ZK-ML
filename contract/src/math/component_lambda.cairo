@@ -21,9 +21,12 @@ pub struct I128AsWFloat {}
 pub struct U128AsWFloat {}
 #[derive(Drop, Copy)]
 pub struct WFloatAsRawFelt {}
+#[derive(Drop, Copy)]
+pub struct WFloatMultiplier {
+    pub factor: WFloat
+}
 
 // -------------------------------------------------
-
 
 pub impl LRawFeltAsWFloat of IComponentLambda<RawFeltAsWFloat,felt252, WFloat> {
     fn apply(self: @RawFeltAsWFloat, input : @felt252) -> WFloat {
@@ -52,5 +55,11 @@ pub impl LU128AsWFloat of IComponentLambda<U128AsWFloat, u128, WFloat> {
 pub impl LWFloatAsRawFelt of IComponentLambda<WFloatAsRawFelt, WFloat, felt252> {
     fn apply(self: @WFloatAsRawFelt, input : @WFloat) -> felt252 {
         input.as_felt()
+    }
+}
+
+pub impl LWFloatMultiplier of IComponentLambda<WFloatMultiplier, WFloat, WFloat> {
+    fn apply(self: @WFloatMultiplier, input : @WFloat) -> WFloat {
+        *self.factor * *input
     }
 }

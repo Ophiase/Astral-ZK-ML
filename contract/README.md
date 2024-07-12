@@ -46,13 +46,21 @@ starkli invoke <CONTRACT_ADDRESS> <method> <arguments as felt252>
 ## Code details
 
 The following basic features doesn't exists in the last stable version of Cairo :
-- Signed integer (eg: int)
+- [Signed integer](src/math/signed.cairo) (eg: int)
     - I use the not supported i128 type.
     - It requires to be converted to felt252 when communicating with RPC
     - It requires to reimplement basics interfaces
-- Float
+- [Float](src/math/wfloat.cairo)
     - Starkware's team recommended me to use either :
         - alexandria or zkfloat
-    - I instead use my own struct WFloat 
-- Lambda
-    - OOP Approach with interface
+    - I instead use my own struct [WFloat](src/math/wfloat.cairo) 
+- [Lambda]((src/math/component_lambda.cairo))
+    - 12/07/24 : Unfortunaly not merged on the official Cairo repos ([PR link](https://github.com/starkware-libs/cairo/pull/6015))
+    - My OOP Approach with interface ([link](src/math/component_lambda.cairo))
+- Basic Linear Algebra (Vector + Matrix)
+    - I implements them myself.
+    - Smart contract integration
+       - 12/07/24 : Merged 3 days ago by Starkware, but unfortunaly not availible on starknet yet ([PR link](https://github.com/starkware-libs/cairo/pull/5974))
+       - I will have to do it the "dirty" way.
+    - [Vector](src/math/vector.cairo)
+    - [Matrix](src/math/matrix.cairo)

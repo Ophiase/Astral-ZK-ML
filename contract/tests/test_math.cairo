@@ -7,6 +7,10 @@ use celestial_zkml::math::wfloat::{
     ZERO_WFLOAT, ONE_WFLOAT, NEG_WFLOAT, HALF_WFLOAT, DECIMAL_WFLOAT, 
 };
 
+use celestial_zkml::math::vector::{
+    Vector, VectorBasics
+};
+
 // ----------------------------------------------------------
 
 fn sep() -> () {
@@ -33,4 +37,33 @@ fn float_works() -> () {
     // let w = z + WFloatBasics::from_pair(0, 25, 2);
     // println!("w = {w}");
     // sep();
+}
+
+#[test]
+fn vector_works() -> () {
+    let v1 = VectorBasics::from_i128(@array![10_i128, 5, 6].span());
+    let v2 = VectorBasics::from_i128(@array![10_i128, 20,  30].span());
+    let v3 = v1 + v2;
+    
+    // println!("{v1} + {v2} = {v3}");
+    assert!(
+        v3 == VectorBasics::from_i128(@array![20_i128, 25,  36].span()), 
+        "v3 wrong value"
+    );
+
+    
+    let v4 = VectorBasics::from_i128(@array![1_i128, 3_i128, 10_i128].span());
+    let v5 = v3 * v4;
+    
+    // println!("{v5}");
+    assert!(
+        v5 == VectorBasics::from_i128(@array![20_i128, 75,  360].span()), 
+        "v5 wrong value"
+    );
+
+    let v6 = v5.scale(WFloatBasics::from_pair(10, 0, 0));
+    assert!(
+        v6 == VectorBasics::from_i128(@array![200_i128, 750,  3600].span()), 
+        "v6 wrong value"
+    );
 }
