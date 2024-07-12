@@ -123,6 +123,21 @@ pub impl WFloatInvertible of Invertible<WFloat> {
     }
 }
 
+pub impl WFloatOrder of PartialOrd<WFloat> {
+    fn le(lhs: WFloat, rhs: WFloat) -> bool {
+        lhs.value <= rhs.value
+    }
+    fn ge(lhs: WFloat, rhs: WFloat) -> bool {
+        lhs.value >= rhs.value
+    }
+    fn lt(lhs: WFloat, rhs: WFloat) -> bool {
+        lhs.value < rhs.value
+    }
+    fn gt(lhs: WFloat, rhs: WFloat) -> bool {
+        lhs.value > rhs.value
+    }
+}
+
 // TODO:
 // pub impl WFloatRem of Rem<WFloat> {
 //     fn rem()

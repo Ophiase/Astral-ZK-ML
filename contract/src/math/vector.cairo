@@ -18,6 +18,7 @@ use super::component_lambda::{
     RawFeltAsWFloat, RawI128AsWFloat, I128AsWFloat, U128AsWFloat, WFloatAsRawFelt,
     WFloatMultiplier
 };
+use super::function;
 use super::function::{
     sqrt
 };
@@ -363,4 +364,52 @@ pub impl VectorBasics of IVectorBasics {
     }
 
     // fn pow_monoid
+
+    fn max(self: @Vector) -> WFloat {
+        let mut max = (*self).at(0);
+        let mut i = 0;
+        loop {
+            if i == self.len() { break(); }
+            let current = (*self).at(i);
+            max = function::max(current, max);
+            i += 1;
+        };
+        max
+    }
+
+    fn argmax_vector(self: @Vector) -> Vector {
+        let max = self.max();
+        let mut content = ArrayTrait::new();
+        let mut i = 0;
+        loop {
+            if i == self.len() { break(); }
+            
+            let current = (*self).at(i);
+            if current == max {
+                content.append(ONE_WFLOAT);
+            } else {
+                content.append(ZERO_WFLOAT);
+            }
+            
+            i += 1;
+        };
+        Vector { content : content.span() }
+    }    
+
+    // Returns the first occurence
+    fn argmax(self: @Vector) -> usize {
+        let max = self.max();
+        let mut i = 0;
+
+        loop {
+            if i == self.len() { panic!("max not found"); }
+            
+            let current = (*self).at(i);
+            if current == max {
+                break(i);
+            }
+            
+            i += 1;
+        }
+    }
 }

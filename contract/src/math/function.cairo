@@ -29,3 +29,21 @@ pub fn sqrt(value : WFloat) -> WFloat {
         i += 1;
     }
 }
+
+#[inline]
+pub fn max(lhs : WFloat, rhs : WFloat) -> WFloat {
+    if lhs > rhs {
+        lhs
+    } else {
+        rhs
+    }
+}
+
+#[inline]
+pub fn min(lhs : WFloat, rhs : WFloat) -> WFloat {
+    if lhs < rhs {
+        lhs
+    } else {
+        rhs
+    }
+}
