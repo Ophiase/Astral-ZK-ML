@@ -213,13 +213,14 @@ pub impl MatrixBasics of IMatrixBasics {
         MatrixBasics::fill(shape, @ZERO_WFLOAT)
     }
 
-    fn unit(dimX : usize, dimY : usize) -> Matrix {
+    fn identity(shape : (usize, usize)) -> Matrix {
+        let (dimX, dimY) = shape;
         let mut result = ArrayTrait::new();
         let mut i = 0;
         loop {
             if i == dimX { break(); }
-            i += 1;
             result.append(VectorBasics::one_one(dimY, i));
+            i += 1;
         };
         Matrix { content: result.span() }
     }

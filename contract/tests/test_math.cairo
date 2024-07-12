@@ -10,6 +10,9 @@ use celestial_zkml::math::wfloat::{
 use celestial_zkml::math::vector::{
     Vector, VectorBasics
 };
+use celestial_zkml::math::matrix::{
+    Matrix, MatrixBasics
+};
 
 // ----------------------------------------------------------
 
@@ -66,4 +69,33 @@ fn vector_works() -> () {
         v6 == VectorBasics::from_i128(@array![200_i128, 750,  3600].span()), 
         "v6 wrong value"
     );
+}
+
+#[test]
+fn matrix_works() -> () {
+    let m1 = MatrixBasics::identity((3,3));
+    println!("{m1}");
+    sep();
+
+    let m2 = MatrixBasics::from_i128(@array![
+        array![1_i128, 0, 0].span(),
+        array![1_i128, 1, 0].span(),
+        array![1_i128, 0, 3].span(),
+    ].span());
+    println!("{m2}");
+    sep();
+    
+    let m3 = MatrixBasics::from_i128(@array![
+        array![1_i128, 0, 0].span(),
+        array![1_i128, 1, 0].span(),
+        array![1_i128, 0, 3].span(),
+    ].span());
+    println!("{m3}");
+    
+    sep();
+    println!("{} + {} = {}", m1, m2, m1 + m2);
+    sep();
+    println!("{} x {} = {}", m1, m2, m1 * m2);
+    sep();
+    println!("{} x {} = {}", m2, m3, m2 * m3);
 }
