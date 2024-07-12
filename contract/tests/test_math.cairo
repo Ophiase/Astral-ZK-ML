@@ -93,9 +93,9 @@ fn matrix_works() -> () {
     println!("{m3}");
     
     sep();
-    println!("{} + {} = {}", m1, m2, m1 + m2);
+    println!("{} +\n {} =\n {}", m1, m2, m1 + m2);
     sep();
-    println!("{} x {} = {}", m1, m2, m1 * m2);
+    println!("{} x\n {} =\n {}", m1, m2, m1 * m2);
     sep();
-    println!("{} x {} = {}", m2, m3, m2 * m3);
+    println!("{} x\n {} =\n {}", m2, m3, m2 * m3);
 }

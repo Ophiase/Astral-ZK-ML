@@ -278,7 +278,7 @@ pub impl MatrixBasics of IMatrixBasics {
                 let component = lambda.apply(content.at(i));
                 sub_result.append(component);
 
-                i += 1;
+                j += 1;
             };
             
             result.append(
