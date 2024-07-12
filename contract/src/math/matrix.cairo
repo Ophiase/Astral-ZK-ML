@@ -243,10 +243,10 @@ pub impl MatrixBasics of IMatrixBasics {
             loop {
                 if j == dimY { break(); }
 
-                let component = lambda.apply(content.at(i));
+                let component = lambda.apply(content.at(j));
                 sub_result.append(component);
 
-                i += 1;
+                j += 1;
             };
             
             result.append(
@@ -275,7 +275,7 @@ pub impl MatrixBasics of IMatrixBasics {
             loop {
                 if j == dimY { break(); }
 
-                let component = lambda.apply(content.at(i));
+                let component = lambda.apply(content.at(j));
                 sub_result.append(component);
 
                 j += 1;
@@ -309,10 +309,10 @@ pub impl MatrixBasics of IMatrixBasics {
             loop {
                 if j == dimY { break(); }
 
-                let component = lambda.apply(content.at(i));
+                let component = lambda.apply(content.at(j));
                 sub_result.append(component);
 
-                i += 1;
+                j += 1;
             };
 
             result.append(sub_result.span());

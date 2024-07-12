@@ -75,7 +75,7 @@ fn vector_works() -> () {
 fn matrix_works() -> () {
     let m1 = MatrixBasics::identity((3,3));
     println!("{m1}");
-    sep();
+    // sep();
 
     let m2 = MatrixBasics::from_i128(@array![
         array![1_i128, 0, 0].span(),
@@ -83,19 +83,23 @@ fn matrix_works() -> () {
         array![1_i128, 0, 3].span(),
     ].span());
     println!("{m2}");
-    sep();
+    // sep();
     
     let m3 = MatrixBasics::from_i128(@array![
         array![1_i128, 0, 0].span(),
-        array![1_i128, 1, 0].span(),
-        array![1_i128, 0, 3].span(),
+        array![0_i128, 0, 0].span(),
+        array![1_i128, 0, 2].span(),
     ].span());
-    println!("{m3}");
+    // println!("{m3}");
+
+
     
-    sep();
-    println!("{} +\n {} =\n {}", m1, m2, m1 + m2);
-    sep();
-    println!("{} x\n {} =\n {}", m1, m2, m1 * m2);
-    sep();
-    println!("{} x\n {} =\n {}", m2, m3, m2 * m3);
+    // sep();
+    // println!("{} +\n {} =\n {}", m1, m2, m1 + m2);
+
+    // sep();
+    // println!("{} x\n {} =\n {}", m1, m2, m1 * m2);
+
+    // sep();
+    // println!("{} x\n {} =\n {}", m2, m3, m2 * m3);
 }
