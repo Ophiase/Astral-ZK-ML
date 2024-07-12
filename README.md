@@ -25,3 +25,15 @@ The models and the two smartcontracts utilizing it are written in the ZK-Proovab
 		- Spacial variant adapted to a specific L3 for a planet/satellite owned by multiples countries.
 - ✅ **Demonstration Client**
     - TODO
+
+## Documentation
+
+- ### [Demonstration Client](client/README.md)
+- ### [On Chain content](contract/README.md) 
+    - ZK-ML tools 
+    - Fully Decentralized contract
+    - Country Wise Decentralized contract
+- ### [Mathematical/Implementation details](documentation/README.md)
+    - Mathematical model/assumptions
+    - Algorithms
+    - Misc
