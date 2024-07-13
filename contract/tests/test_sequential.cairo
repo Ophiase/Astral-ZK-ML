@@ -54,13 +54,18 @@ fn build_neural_network() {
     println!("y = \n{y}");
 
     let someY = MatrixBasics::from_i128(@array![
-        array![3, 5, 2, 4 ].span(),
-        array![3, 9, 1, 2 ].span(),
-        array![5, 9, 1, 2 ].span(),
-        array![5, 9, 1, 2 ].span(),
-        array![5, 5, 2, 4 ].span(),
+        // array![3, 5, 2, 4 ].span(),
+        // array![3, 9, 1, 2 ].span(),
+        // array![5, 9, 1, 2 ].span(),
+        // array![5, 9, 1, 2 ].span(),
+        // array![5, 5, 2, 4 ].span(),
+        array![1, 3, 5, 1].span(),
+        array![1, 3, 5, 1].span(),
+        array![1, 3, 5, 1].span(),
+        array![1, 3, 5, 1].span(),
+        array![1, 3, 5, 1].span()
     ].span());
 
-    model.train(@X, @someY, 1, Option::None);
+    model.train(@X, @someY, 10, Option::None);
     println!("z = \n{}", model.forward(@X));
 }

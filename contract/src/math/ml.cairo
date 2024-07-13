@@ -301,17 +301,17 @@ pub impl SequentialBasics of ISequentialBasics {
         let mut result = ArrayTrait::new();
         let mut dY: Matrix = *dY;
 
-        let mut i = 1;
+        let mut i : u32 = self.layers.len();
         loop {
-            if i == self.layers.len() {
-                break ();
-            }
-
+            i -= 1;
+            
             let mut value: DenseLayer = *self.layers.at(i);
             dY = value.backward(dY, self.optimizer.learning_rate);
             result.append(value);
-
-            i += 1;
+            
+            if i == 0{
+                break ();
+            }
         };
 
         self.layers = result.span();
