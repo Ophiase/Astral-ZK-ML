@@ -47,3 +47,19 @@ pub fn min(lhs : WFloat, rhs : WFloat) -> WFloat {
         rhs
     }
 }
+
+// TODO
+pub fn exp(x: WFloat) -> WFloat {
+    let mut sum = ONE_WFLOAT;
+    let mut term = ONE_WFLOAT;
+    let mut n = ONE_WFLOAT;
+    let mut i = 0;
+    loop {
+        if i == 100 { break(); }
+        term = term * (x / n);
+        sum = sum + term;
+        n = n + ONE_WFLOAT;
+        i += 1;
+    };
+    sum
+}
