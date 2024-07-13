@@ -11,7 +11,11 @@ pub trait ICountryWiseContract<TContractState> {
 
 #[starknet::contract]
 pub mod CountryWiseContract {
-    use starknet::ContractAddress;
+    use astral_zkml::math::ml::ILayer;
+use core::array::SpanTrait;
+use astral_zkml::math::matrix::IMatrixBasics;
+use astral_zkml::math::vector::IVectorBasics;
+use starknet::ContractAddress;
     use astral_zkml::math::wfloat::{WFloat};
     use astral_zkml::math::vector::{Vector, VectorBasics};
     use astral_zkml::math::matrix::{Matrix, MatrixBasics};
@@ -26,15 +30,78 @@ pub mod CountryWiseContract {
         dimension: (usize, usize),
 
         model_size: usize,
-        model_content: LegacyMap<SerializedLayerIndex, SerializedLayerContent>
+        model_content: LegacyMap<(usize, SerializedLayerIndex), SerializedLayerContent>
     }
 
     // DIRTY PART (waiting for starknet-2.7.2 to store the network properly)
     // ------------------------------------------------------------------------------------
 
-    fn save_model(model : Sequential) {
-
+    fn save_biais(ref self: ContractState, which_layer : usize, biais : Vector) {
+        let mut i = 0;
+        loop {
+            if i == biais.len() { break(); }
+            self.model_content.write(
+                (which_layer, SerializedLayerIndex::Biais(i) ),
+                SerializedLayerContent::Weight(biais.at(i))
+            );
+            i += 1;
+        };
     }
+
+    fn save_weights(ref self: ContractState, which_layer : usize, weights : Matrix) {
+        let (dimX, dimY) = weights.shape();
+        let mut i = 0;
+        loop {
+            if i == dimX { break(); }
+
+            let mut j = 0;
+            loop {
+                if j == dimY { break(); }
+
+                self.model_content.write(
+                    (which_layer, SerializedLayerIndex::Weights((i, j)) ),
+                    SerializedLayerContent::Weight( weights.at(i, j) )
+                );  
+                j += 1;
+            };
+            i += 1;
+        };
+    }
+
+    fn save_layer(ref self: ContractState, which_layer : usize, layer : DenseLayer) {
+        self.model_content.write(
+            ( which_layer, SerializedLayerIndex::InputSize ),
+            SerializedLayerContent::InputSize( layer.get_input_shape() )
+        );  
+        
+        self.model_content.write(
+            ( which_layer, SerializedLayerIndex::OutputSize ),
+            SerializedLayerContent::OutputSize( layer.get_output_shape() )
+        );  
+
+        save_biais(ref self, which_layer, layer.biaises);
+        save_weights(ref self, which_layer, layer.weights);
+        
+        self.model_content.write(
+            ( which_layer, SerializedLayerIndex::ActivationFunction ),
+            SerializedLayerContent::ActivationFunction( layer.activation_function )
+        );
+    }
+
+    // -------------------------------
+
+    fn save_model(ref self: ContractState, model : Sequential) {
+        let mut i = 0;
+        loop {
+            if i == model.layers.len() { break(); }
+            save_layer(ref self, i, *(model.layers.at(i)) );
+            i += 1;
+        };
+    }
+
+    // -------------------------------
+
+    // -------------------------------
 
     // fn read_model() -> Sequential {
     // }

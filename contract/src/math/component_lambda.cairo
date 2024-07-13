@@ -61,7 +61,7 @@ pub struct LambdaActivationDerivative {
 // -------------------------------------------------
 
 pub impl LIdentity of IComponentLambda<Identity, WFloat, WFloat> {
-    fn apply(self: @RawFeltAsWFloat, input: @WFloat) -> WFloat {
+    fn apply(self: @Identity, input: @WFloat) -> WFloat {
         *input
     }
 }

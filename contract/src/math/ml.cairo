@@ -95,15 +95,16 @@ pub enum SerializedLayerIndex {
     OutputSize,
     // Type: LayerType,
     Biais: usize,
-    WeightMatrix: (usize, usize),
-    ActivationFunction: ActivationFunction
+    Weights: (usize, usize),
+    ActivationFunction
 }
 
 #[derive(Copy, Drop, Hash, Serde, starknet::Store)]
 pub enum SerializedLayerContent {
     InputSize: usize,
     OutputSize: usize,
-    Weight: felt252
+    Weight: WFloat,
+    ActivationFunction: ActivationFunction
 }
 
 // -------------------------------------------------
@@ -125,12 +126,12 @@ pub struct DenseLayer {
     built: bool,
     input_shape: usize,
     output_shape: usize,
-    activation_function: ActivationFunction,
+    pub activation_function: ActivationFunction,
     cache_input: Matrix,
     cache_z: Matrix,
     cache_output: Matrix,
-    weights: Matrix,
-    biaises: Vector,
+    pub weights: Matrix,
+    pub biaises: Vector,
 }
 
 #[derive(Copy, Drop)]
@@ -143,9 +144,9 @@ pub const DEFAULT_SGD : SGD = SGD { learning_rate: DECIMAL_WFLOAT, loss: LossFun
 
 #[derive(Drop)]
 pub struct Sequential {
-    layers: Span<DenseLayer>,
-    optimizer: SGD,
-    history: Array<WFloat>
+    pub layers: Span<DenseLayer>,
+    pub optimizer: SGD,
+    pub history: Array<WFloat>
 }
 
 // -------------------------------------------------
