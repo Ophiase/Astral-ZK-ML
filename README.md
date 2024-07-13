@@ -1,5 +1,7 @@
 # Astral-ZK-ML
 
+<p align="center"><img src="resources/logo.png" width=400></p>
+
 Sponsorized by ETH Bruxelles Contest ⚡️
 
 Decentralized Machine Learning Protocol adapted to both terrestrial and spatial context. 
@@ -17,11 +19,13 @@ The models and the two smartcontracts utilizing it are written in the ZK-Proovab
 		- Graph Attention Network
 			- eg: Constellation identification
 - ✅ **Decentralized Smart Contracts** : Variants of the smart contract :
-	- Fully Decentralized : 
+	- **Fully Decentralized**
+		- <p align="center"><img src="./resources/schema_fully_decentralized.png" width=700></p>
 		- Based on financial incentive (ie. egoistic incentive)
 		- Terestrial variant adapted to Starknet L2.
-	- Country Wise Decentralized :
-		- Based on 
+	- **Country Wise Decentralized**
+		- <p align="center"><img src="./resources/schema_country_wise_decentralized.png" width=8700></p>
+		- Assumed resistance to Byzantine fault
 		- Spacial variant adapted to a specific L3 for a planet/satellite owned by multiples countries.
 - ✅ **Demonstration Client**
     - TODO
