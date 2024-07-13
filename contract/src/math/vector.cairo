@@ -27,6 +27,9 @@ use super::algebra::{
     NeutralElement, Invertible,
     pow, pow_monoid
 };
+use super::random::{
+    lcg_rand, normalize_lgn_rand_11, normalize_lgn_rand
+};
 
 // -------------------------------------------------
 // VECTOR
@@ -420,5 +423,20 @@ pub impl VectorBasics of IVectorBasics {
             
             i += 1;
         }
+    }
+
+    // values between -1 and 1
+    fn random(dimension: usize, seed: u64) -> Vector {
+        let mut seed = seed;
+        let mut result = ArrayTrait::new();
+        let mut i = 0;
+        loop {
+            if i == dimension { break(); }
+            result.append( normalize_lgn_rand_11(seed) );
+            seed = lcg_rand(seed);
+            i += 1;
+        };
+
+        Vector { content: result.span() }
     }
 }

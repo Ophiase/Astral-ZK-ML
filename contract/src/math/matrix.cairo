@@ -27,6 +27,9 @@ use super::algebra::{
     NeutralElement, Invertible,
     pow, pow_monoid
 };
+use super::random::{
+    lcg_rand, normalize_lgn_rand_11, normalize_lgn_rand
+};
 
 // -------------------------------------------------
 // MATRIX
@@ -631,5 +634,21 @@ pub impl MatrixBasics of IMatrixBasics {
             i += 1;
         };
         result
+    }
+
+    // values between -1 and 1
+    fn random(shape: (usize, usize), seed: u64) -> Matrix {
+        let (dimX, dimY) = shape;
+        let mut seed = seed;
+        let mut result = ArrayTrait::new();
+        let mut i = 0;
+        loop {
+            if i == dimX { break(); }
+            result.append( VectorBasics::random(dimY, seed*293 + 13) );
+            seed = lcg_rand(seed);
+            i += 1;
+        };
+
+        Matrix { content: result.span() }
     }
 }
