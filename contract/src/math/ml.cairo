@@ -168,14 +168,6 @@ impl DenseLayerBasics of IDenseLayerBasics {
 
         layer
     }
-
-    fn _init_weights(ref self : DenseLayer, seed : u64) -> () {
-        
-    } 
-    fn _init_biaises(ref self : DenseLayer, seed : u64) -> () {
-        
-    } 
-
 }
 
 impl DenseLayerImpl of ILayer<DenseLayer> {
@@ -186,8 +178,10 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
         };
         
         self.input_shape = input_shape;
-        self._init_weights(seed + 29399);
-        self._init_biaises(seed + 18839);
+        
+        self.weights = MatrixBasics::random((input_shape, self.output_shape), seed + 29399);
+        self.biaises  = VectorBasics::random(self.output_shape, seed + 18839);
+
         self.built = true;
     }
 
@@ -229,4 +223,9 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
     fn num_params(ref self : @DenseLayer) -> usize {
         1_usize + *self.output_shape + (*self.input_shape * *self.output_shape) 
     }
+}
+
+#[generate_trait]
+impl SequentialBasics of ISequentialBasics {
+    
 }
