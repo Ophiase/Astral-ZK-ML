@@ -170,6 +170,15 @@ pub impl DenseLayerBasics of IDenseLayerBasics {
 
         layer
     }
+
+    fn add(
+        output_shape: usize,
+        activation_function: ActivationFunction,
+    ) -> DenseLayer {
+        DenseLayerBasics::init(
+            Option::None, output_shape, activation_function, Option::None
+        )
+    }
 }
 
 impl DenseLayerImpl of ILayer<DenseLayer> {
@@ -264,7 +273,7 @@ pub impl SequentialBasics of ISequentialBasics {
         seed = lcg_rand(seed);
         result.append(first_layer);
 
-        let mut input_shape = self.layers[0].get_input_shape();
+        let mut input_shape = self.layers[0].get_output_shape();
         let mut i = 1;
         loop {
             if i == self.layers.len() {
@@ -303,6 +312,23 @@ pub impl SequentialBasics of ISequentialBasics {
         output
     }
 
+    fn _reverse_layers(layers: Array<DenseLayer>) -> Array<DenseLayer> {
+        let mut result = ArrayTrait::new();
+        let mut i = 0;
+        let n = layers.len();
+        loop {
+            if i == n {
+                break ();
+            }
+
+            let value = *(layers.at(n - i - 1));
+            result.append(value);
+
+            i += 1;
+        };
+        result
+    }
+
     fn backward(ref self: Sequential, dY: @Matrix) -> () {
         let mut result = ArrayTrait::new();
         let mut dY: Matrix = *dY;
@@ -315,19 +341,19 @@ pub impl SequentialBasics of ISequentialBasics {
             dY = value.backward(dY, self.optimizer.learning_rate);
             result.append(value);
             
-            if i == 0{
+            if i == 0 {
                 break ();
             }
         };
 
-        self.layers = result.span();
+        self.layers = SequentialBasics::_reverse_layers(result).span();
     }
 
     fn train_epoch(ref self: Sequential, X: @Matrix, y: @Matrix, batch_size: Option<usize>) -> () {
         let mut average_loss = ZERO_WFLOAT;
 
         // TODO: shuffle before epoch
-
+        // println!("Epoch");
         assert!(batch_size.is_none(), "Not implemented yet!");
         {
             let output = self.forward(X);
