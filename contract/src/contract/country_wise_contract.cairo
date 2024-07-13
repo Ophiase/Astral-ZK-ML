@@ -3,7 +3,32 @@ use super::super::math::matrix::{Matrix};
 
 #[starknet::interface]
 pub trait ICountryWiseContract<TContractState> {
+    // USER SIDE
+    // ---------------
     fn predict(ref self: TContractState, inputs: Matrix, for_storage: bool) -> Matrix;
+
+    // VALIDATOR SIDE
+    // ---------------
+
+    // fn evaluate_stored_prediction()
+
+    // fn get_filtered_epoch
+    // fn get_propositions
+
+    // MANAGEMENT
+    // ---------------
+
+    // fn get_validator_list(self: @TContractState) -> Array<ContractAddress>;
+    // fn get_countries_list(self: @TContractState) -> Array<felt252>;
+    
+    // fn update_proposition(ref self: TContractState, proposition : Option<(usize, ContractAddress)>);
+    // fn vote_for_a_proposition(ref self: TContractState, which_admin : usize, support_his_proposition : bool);
+    
+    // fn get_replacement_propositions(self: @TContractState) -> Array<Option<(usize, ContractAddress)>>;
+    // fn get_a_specific_proposition(self: @TContractState, which_admin : usize) -> Option<(usize, ContractAddress)>;
+
+    // MISC
+    // ---------------
 }
 
 #[starknet::contract]
@@ -22,12 +47,33 @@ pub mod CountryWiseContract {
         SerializedLayerContent, Sequential, SequentialBasics, DenseLayer, DenseLayerBasics
     };
 
+    // ------------------------------------------------------------------------------------
+
+    #[derive(Drop, Serde, starknet::Store, Copy, Hash)]
+    enum PredictionIndex {
+        Author,
+        WhichComponent: usize
+    }
+
+    #[derive(Drop, Serde, starknet::Store, Copy, Hash)]
+    enum PredictionData {
+        Author: ContractAddress,
+        Data: WFloat
+    }
+
     #[storage]
     struct Storage {
-        dimension: (usize, usize),
         model_size: usize,
         model_optimizer: SGD,
-        model_content: LegacyMap<(usize, SerializedLayerIndex), SerializedLayerContent>
+        model_content: LegacyMap<(usize, SerializedLayerIndex), SerializedLayerContent>,
+
+        max_propositions: usize,
+        n_proposed: usize,
+        propositions: LegacyMap<(usize, PredictionIndex), PredictionData>,
+
+        min_filtered: usize,
+        n_filtered: usize,
+        filtered: LegacyMap<(usize, PredictionIndex), PredictionData>,
     }
 
     // DIRTY PART (waiting for starknet-2.7.2 to store the network properly)
