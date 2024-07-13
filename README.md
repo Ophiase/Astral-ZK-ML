@@ -5,7 +5,7 @@
 Sponsorized by ETH Bruxelles Contest ⚡️
 
 Decentralized Machine Learning Protocol adapted to both terrestrial and spatial context. \
-The models and the two smartcontracts utilizing it are written in the ZK-Proovable language Cairo.
+The models and the two smartcontracts utilizing them are written in the ZK-Proovable language Cairo.
 
 ## Introduction
 
