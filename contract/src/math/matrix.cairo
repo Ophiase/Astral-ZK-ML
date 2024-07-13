@@ -20,7 +20,7 @@ use super::vector::{
 use super::component_lambda::{
     IComponentLambda,
     RawFeltAsWFloat, RawI128AsWFloat, I128AsWFloat, U128AsWFloat, WFloatAsRawFelt,
-    WFloatMultiplier
+    WFloatMultiplier, WFloatDivider
 };
 
 use super::algebra::{
@@ -412,6 +412,11 @@ pub impl MatrixBasics of IMatrixBasics {
         self.apply( WFloatMultiplier { factor: factor } )
     }
 
+    #[inline]
+    fn divide_by(self: @Matrix, factor : WFloat) -> Matrix {
+        self.apply( WFloatDivider { factor: factor } )
+    }
+
     fn dot_vector(self : @Matrix, vector : @Vector) -> Vector {
         let (_, dimY) = self.shape();
         assert!(dimY == vector.len(), "dimension mismatch");
@@ -598,5 +603,33 @@ pub impl MatrixBasics of IMatrixBasics {
         // let C2 : Matrix = C21.horizontal_join(@C22);
         
         // C1.vertical_join(@C2)
+    }
+
+    fn row_wise_addition(self : @Matrix, vector: @Vector) -> Matrix {
+        let (dimX, _) = self.shape();
+        let mut result = ArrayTrait::new();
+
+        let mut i = 0;
+        loop {
+            if i == dimX { break(); }
+            let current : Vector = *(*self).content.at(i);
+            result.append( current + *vector );
+            i += 1;
+        };
+
+        Matrix { content: result.span() }
+    }
+
+    // Sum all the rows (vectors) 
+    fn sum(self: @Matrix) -> Vector {
+        let dimX = self.dimX();
+        let mut result = VectorBasics::zeros(self.dimY());
+        let mut i = 0;
+        loop {
+            if i == dimX { break(); }
+            result = result + self.get_ith_line(i);            
+            i += 1;
+        };
+        result
     }
 }

@@ -1,3 +1,4 @@
+use astral_zkml::math::matrix::IMatrixBasics;
 use core::option::OptionTrait;
 use astral_zkml::math::algebra::Invertible;
 use astral_zkml::math::vector::IVectorBasics;
@@ -114,6 +115,10 @@ struct DenseLayer {
     output_shape: usize,
     activationFunction: ActivationFunction,
     
+    cache_input: Matrix,
+    cache_z: Matrix,
+    cache_output: Matrix,
+
     weights: Matrix,
     biaises: Vector,
 }
@@ -145,6 +150,10 @@ impl DenseLayerBasics of IDenseLayerBasics {
             input_shape: 0,
             output_shape: output_shape,
             activationFunction: activation_function,
+
+            cache_input: MatrixBasics::zeros((0,0)),
+            cache_z: MatrixBasics::zeros((0,0)),
+            cache_output: MatrixBasics::zeros((0,0)),
         
             weights: MatrixBasics::zeros((0,0)),
             biaises: VectorBasics::zeros(0),
@@ -159,24 +168,63 @@ impl DenseLayerBasics of IDenseLayerBasics {
 
         layer
     }
+
+    fn _init_weights(ref self : DenseLayer, seed : u64) -> () {
+        
+    } 
+    fn _init_biaises(ref self : DenseLayer, seed : u64) -> () {
+        
+    } 
+
 }
 
 impl DenseLayerImpl of ILayer<DenseLayer> {
-    // TODO
     fn build(ref self : DenseLayer, input_shape: usize, seed : Option<u64>) -> () {
-
+        let seed = match seed {
+            Option::Some(x) => x,
+            Option::None => default_seed
+        };
+        
+        self.input_shape = input_shape;
+        self._init_weights(seed + 29399);
+        self._init_biaises(seed + 18839);
+        self.built = true;
     }
 
-    // TODO:
     fn forward(ref self : DenseLayer, X: Matrix) -> Matrix {
+        self.cache_input = X;
+        self.cache_z = (X.dot(@self.weights)).row_wise_addition(@self.biaises);
+        self.cache_output = self.cache_z.apply(
+            match self.activationFunction {
+                ActivationFunction::ReLU => ReLU {},
+                // TODO: apply softmax row-wise 
+                ActivationFunction::SoftMax => panic!("Not Implemented")
+            }
+        );
+
         X
     }
 
-    // TODO:
     fn backward(ref self : DenseLayer, dY: Matrix, learning_rate: WFloat) -> Matrix {
-        dY
+        let m = dY.dimX();
+        let m_float = WFloatBasics::from_u64(m.into()); 
+        let dZ = dY * self.cache_z.apply( 
+            match self.activationFunction {
+                ActivationFunction::ReLU => ReLUDerivative {},
+                // TODO: apply softmax row-wise 
+                ActivationFunction::SoftMax => panic!("Not Implemented")
+            }
+        );
+
+        let dW = (self.cache_input.transpose()).dot(@dZ).divide_by(m_float);
+        let dB = dZ.sum().divide_by(m_float);
+        let dX = dZ.dot(@self.weights.transpose());
+
+        self.weights = self.weights - dW.scale(learning_rate);
+        self.biaises = self.biaises - dB.scale(learning_rate); 
+
+        dX
     }
-    
     
     fn num_params(ref self : @DenseLayer) -> usize {
         1_usize + *self.output_shape + (*self.input_shape * *self.output_shape) 
