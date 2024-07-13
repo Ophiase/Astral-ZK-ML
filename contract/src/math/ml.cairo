@@ -134,7 +134,7 @@ pub struct DenseLayer {
     pub biaises: Vector,
 }
 
-#[derive(Copy, Drop)]
+#[derive(Copy, Drop, starknet::Store)]
 pub struct SGD {
     pub learning_rate: WFloat,
     pub loss: LossFunctionType
@@ -432,6 +432,41 @@ pub impl SequentialBasics of ISequentialBasics {
             let weights : Matrix = MatrixBasics::from_wfloat(@fmatrix);
             let biaises : Vector = VectorBasics::from_wfloat(@fvector);
             
+            result.append( DenseLayer {
+                built: true,
+                input_shape: weights.dimX(),
+                output_shape: biaises.len(),
+                activation_function: activation,
+                cache_input: MatrixBasics::zeros((0, 0)),
+                cache_z: MatrixBasics::zeros((0, 0)),
+                cache_output: MatrixBasics::zeros((0, 0)),
+
+                weights: weights,
+                biaises: biaises,
+            });
+
+            i += 1;
+        };
+
+        Sequential {
+            layers: result.span(),
+            optimizer: DEFAULT_SGD,
+            history: array![]
+        }
+    }
+
+    fn init_from_storage(
+        layers: Span<( Matrix, Vector, ActivationFunction )>,
+        optimizer: SGD
+    ) -> Sequential {
+        let mut result = ArrayTrait::new();
+
+        let mut i = 0;
+        loop {
+            if i == layers.len() { break(); }
+            
+            let (weights, biaises, activation) = *layers.at(i);
+
             result.append( DenseLayer {
                 built: true,
                 input_shape: weights.dimX(),
