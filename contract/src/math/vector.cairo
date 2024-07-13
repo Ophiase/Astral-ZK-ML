@@ -16,7 +16,7 @@ use super::wfloat::{
 use super::component_lambda::{
     IComponentLambda,
     RawFeltAsWFloat, RawI128AsWFloat, I128AsWFloat, U128AsWFloat, WFloatAsRawFelt,
-    WFloatMultiplier
+    WFloatMultiplier, WFloatDivider
 };
 use super::function;
 use super::function::{
@@ -355,12 +355,21 @@ pub impl VectorBasics of IVectorBasics {
         self.apply( WFloatMultiplier { factor: factor } )
     }
 
+    #[inline]
+    fn divide_by(self: @Vector, factor : WFloat) -> Vector {
+        self.apply( WFloatDivider { factor: factor } )
+    }
+
     fn dot(self: @Vector, rhs : @Vector) -> WFloat {
         (*self * *rhs).sum()
     }
 
     fn norm(self: @Vector) -> WFloat {
         sqrt(self.dot(self))
+    }
+
+    fn normalize(self: @Vector) -> Vector {
+        self.divide_by(self.norm())
     }
 
     // fn pow_monoid

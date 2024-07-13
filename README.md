@@ -11,6 +11,9 @@ The models and the two smartcontracts utilizing them are written in the ZK-Proov
 
 - ✅ **ZK-ML tools** : Built in Cairo for contracts on starknet-compatible blockchain
 	- Implemented
+		- Basic Algebra + Linear Algebra
+			- Principal types: Signed Integer, Float (WFloat), Vector, Matrix
+			- Numerous High level operations to manipulate those types.
 		- Multi Layer Perceptron (ie. regular Neural Network)
 			- eg: Star type identification
 	- Not Implemented Yet

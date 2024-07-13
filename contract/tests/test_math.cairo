@@ -14,6 +14,10 @@ use astral_zkml::math::matrix::{
     Matrix, MatrixBasics
 };
 
+use astral_zkml::math::function::{
+    exp
+};
+
 // ----------------------------------------------------------
 
 fn sep() -> () {
@@ -142,4 +146,16 @@ fn matrix_works() -> () {
     // println!("{}", m7.dot(@m6));
 
     let _ = m1 + m2 + m3;
+}
+
+// #[test]
+// fn check_exp_function() -> () {
+//     println!("{}", exp(WFloatBasics::from_i128(1)));
+//     println!("{}", exp(WFloatBasics::from_i128(2)));
+//     println!("{}", exp(WFloatBasics::from_i128(3)));
+// }
+
+#[test]
+fn check_activation_function() -> () {
+    
 }

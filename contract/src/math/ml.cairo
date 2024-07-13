@@ -1,3 +1,5 @@
+use astral_zkml::math::algebra::Invertible;
+use astral_zkml::math::vector::IVectorBasics;
 use super::wfloat::{
     WFloat, WFloatBasics,
     ZERO_WFLOAT, ONE_WFLOAT, NEG_WFLOAT, HALF_WFLOAT, DECIMAL_WFLOAT, 
@@ -11,6 +13,9 @@ use super::matrix::{
 };
 use super::function::{
     exp
+};
+use super::component_lambda::{
+    Exponential, ReLU, ReLUDerivative
 };
 
 // -------------------------------------------------
@@ -29,47 +34,27 @@ pub enum ActivationFunction {
     SoftMax
 }
 
-pub fn relu(x: WFloat) -> WFloat {
-    if x > ZERO_WFLOAT {
-        x
+pub fn relu(x: @WFloat) -> WFloat {
+    if *x > ZERO_WFLOAT {
+        *x
     } else {
         ZERO_WFLOAT
     }
 }
 
-pub fn relu_derivative(x: WFloat) -> WFloat {
-    if x > ZERO_WFLOAT {
+pub fn relu_derivative(x: @WFloat) -> WFloat {
+    if *x > ZERO_WFLOAT {
         ONE_WFLOAT
     } else {
         ZERO_WFLOAT
     }
 }
 
-// pub fn softmax(x: @Vector) -> Vector {
-//     let mut exp_values = ArrayTrait::new();
-//     let mut sum_exp = ZERO_WFLOAT;
-
-    // let mut i = 0;
-    // loop {
-    //     if i ==  { break(); }
-        
-    //     i += 1;
-    // };
-
-    // for &value in x.iter() {
-
-    //     let exp_value = exp(value);
-    //     exp_values.push(exp_value);
-    //     sum_exp = sum_exp + exp_value;
-    // }
-    
-    // let mut softmax_values = ArrayTrait::new();
-    // for &value in exp_values.iter() {
-    //     softmax_values.push(value / sum_exp);
-    // }
-    
-//     softmax_values
-// }
+pub fn softmax(x: @Vector) -> Vector {
+    let denormalized = x.apply(Exponential {});
+    let normalizer = denormalized.sum();
+    denormalized.divide_by(normalizer)
+}
 
 // pub fn softmax_derivative(x: &Vector) -> Vector {
 //     let softmax_values = softmax(x);
