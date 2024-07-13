@@ -1,10 +1,6 @@
 use super::wfloat::{WFloat, WFloatBasics, WFloatSignedBasics};
 use super::function::{exp};
-use super::ml::{
-    relu, relu_derivative,
-    sigmoid, sigmoid_derivative,
-    ActivationFunction
-};
+use super::ml::{relu, relu_derivative, sigmoid, sigmoid_derivative, ActivationFunction};
 
 // -------------------------------------------------
 
@@ -50,7 +46,7 @@ pub struct Sigmoid {}
 pub struct SigmoidDerivative {}
 
 #[derive(Drop, Copy)]
-pub struct LambdaActivation { 
+pub struct LambdaActivation {
     pub activation_function: ActivationFunction
 }
 #[derive(Drop, Copy)]
@@ -142,23 +138,24 @@ pub impl LSigmoidActivationDerivative of IComponentLambda<SigmoidDerivative, WFl
 pub impl LLambdaActivation of IComponentLambda<LambdaActivation, WFloat, WFloat> {
     fn apply(self: @LambdaActivation, input: @WFloat) -> WFloat {
         relu(input)
-        // match self.activation_function {
-        //     ActivationFunction::ReLU => relu(input),
-        //     ActivationFunction::Sigmoid => sigmoid(input),
-        //     ActivationFunction::SoftMax => panic!("Not Implemented")
-        // }
+    // match self.activation_function {
+    //     ActivationFunction::ReLU => relu(input),
+    //     ActivationFunction::Sigmoid => sigmoid(input),
+    //     ActivationFunction::SoftMax => panic!("Not Implemented")
+    // }
     }
 }
 
-pub impl LLambdaActivationDerivative of IComponentLambda<LambdaActivationDerivative, WFloat, WFloat> {
+pub impl LLambdaActivationDerivative of IComponentLambda<
+    LambdaActivationDerivative, WFloat, WFloat
+> {
     fn apply(self: @LambdaActivationDerivative, input: @WFloat) -> WFloat {
         relu_derivative(input)
-
-        // HIGH COST
-        // match self.activation_function {
-        //     ActivationFunction::ReLU => relu_derivative(input),
-        //     ActivationFunction::Sigmoid => sigmoid_derivative(input),
-        //     ActivationFunction::SoftMax => panic!("Not Implemented")
-        // }
+    // HIGH COST
+    // match self.activation_function {
+    //     ActivationFunction::ReLU => relu_derivative(input),
+    //     ActivationFunction::Sigmoid => sigmoid_derivative(input),
+    //     ActivationFunction::SoftMax => panic!("Not Implemented")
+    // }
     }
 }

@@ -15,9 +15,7 @@ use super::component_lambda::{Exponential, LambdaActivation, LambdaActivationDer
 use super::random::{default_seed, lcg_rand, normalize_lgn_rand, normalize_lgn_rand_11};
 
 use core::fmt::{Display, Formatter, Error};
-use super::super::utils::{
-    SEP
-};
+use super::super::utils::{SEP};
 
 // MACHINE LEARNING
 // -------------------------------------------------
@@ -57,11 +55,11 @@ pub fn relu(x: @WFloat) -> WFloat {
     }
 }
 
-pub fn sigmoid(x : @WFloat) -> WFloat {
+pub fn sigmoid(x: @WFloat) -> WFloat {
     (ONE_WFLOAT + exp(@(ZERO_WFLOAT - *x))).inv()
 }
 
-pub fn sigmoid_derivative(x : @WFloat) -> WFloat {
+pub fn sigmoid_derivative(x: @WFloat) -> WFloat {
     sigmoid(x) * (ONE_WFLOAT - sigmoid(x))
 }
 
@@ -140,7 +138,7 @@ pub struct SGD {
     pub loss: LossFunctionType
 }
 
-pub const DEFAULT_SGD : SGD = SGD { learning_rate: DECIMAL_WFLOAT, loss: LossFunctionType::MSE };
+pub const DEFAULT_SGD: SGD = SGD { learning_rate: DECIMAL_WFLOAT, loss: LossFunctionType::MSE };
 
 #[derive(Drop)]
 pub struct Sequential {
@@ -181,13 +179,8 @@ pub impl DenseLayerBasics of IDenseLayerBasics {
         layer
     }
 
-    fn add(
-        output_shape: usize,
-        activation_function: ActivationFunction,
-    ) -> DenseLayer {
-        DenseLayerBasics::init(
-            Option::None, output_shape, activation_function, Option::None
-        )
+    fn add(output_shape: usize, activation_function: ActivationFunction,) -> DenseLayer {
+        DenseLayerBasics::init(Option::None, output_shape, activation_function, Option::None)
     }
 }
 
@@ -217,23 +210,28 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
     fn forward(ref self: DenseLayer, X: Matrix) -> Matrix {
         self.cache_input = X;
         self.cache_z = (X.dot(@self.weights)).row_wise_addition(@self.biaises);
-        self.cache_output = self.cache_z.apply( LambdaActivation { activation_function: self.activation_function } );
+        self
+            .cache_output = self
+            .cache_z
+            .apply(LambdaActivation { activation_function: self.activation_function });
         self.cache_output
     }
 
     fn backward(ref self: DenseLayer, dY: Matrix, learning_rate: WFloat) -> Matrix {
         let m = dY.dimX();
         let m_float = WFloatBasics::from_u64(m.into());
-        
+
         let dZ = dY
             * self
                 .cache_z
-                .apply( LambdaActivationDerivative { activation_function: self.activation_function } );
+                .apply(
+                    LambdaActivationDerivative { activation_function: self.activation_function }
+                );
 
         let dW = (self.cache_input.transpose()).dot(@dZ).divide_by(m_float);
         let dB = dZ.sum().divide_by(m_float);
         let dX = dZ.dot(@self.weights.transpose());
-        
+
         self.weights = self.weights - dW.scale(learning_rate);
         self.biaises = self.biaises - dB.scale(learning_rate);
 
@@ -248,12 +246,8 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
 #[generate_trait]
 pub impl SequentialBasics of ISequentialBasics {
     fn init(layers: Span<DenseLayer>, optimizer: SGD, seed: Option<u64>) -> Sequential {
-        let mut model = Sequential {
-            layers : layers,
-            optimizer : optimizer,
-            history : array![]
-        };
-        
+        let mut model = Sequential { layers: layers, optimizer: optimizer, history: array![] };
+
         model.build(seed);
         model
     }
@@ -266,7 +260,7 @@ pub impl SequentialBasics of ISequentialBasics {
             Option::None => default_seed
         };
 
-        let mut first_layer : DenseLayer = *self.layers.at(0);
+        let mut first_layer: DenseLayer = *self.layers.at(0);
         first_layer.build(first_layer.input_shape, Option::Some(seed));
         seed = lcg_rand(seed);
         result.append(first_layer);
@@ -331,14 +325,14 @@ pub impl SequentialBasics of ISequentialBasics {
         let mut result = ArrayTrait::new();
         let mut dY: Matrix = *dY;
 
-        let mut i : u32 = self.layers.len();
+        let mut i: u32 = self.layers.len();
         loop {
             i -= 1;
-            
+
             let mut value: DenseLayer = *self.layers.at(i);
             dY = value.backward(dY, self.optimizer.learning_rate);
             result.append(value);
-            
+
             if i == 0 {
                 break ();
             }
@@ -358,7 +352,7 @@ pub impl SequentialBasics of ISequentialBasics {
             let loss = mse_loss(@output, y);
             let dY: Matrix = output - *y;
             self.backward(@dY);
-            
+
             average_loss = loss.mean()
         }
 
@@ -376,118 +370,114 @@ pub impl SequentialBasics of ISequentialBasics {
             self.train_epoch(X, y, batch_size);
             i += 1;
         };
-    
     }
 
     fn init_from_felt252(
-        layers: Span<( Span<Span<felt252>>, Span<felt252>, ActivationFunction )>,
-        optimizer: SGD
+        layers: Span<(Span<Span<felt252>>, Span<felt252>, ActivationFunction)>, optimizer: SGD
     ) -> Sequential {
         let mut result = ArrayTrait::new();
 
         let mut i = 0;
         loop {
-            if i == layers.len() { break(); }
-            
+            if i == layers.len() {
+                break ();
+            }
+
             let (fmatrix, fvector, activation) = *layers.at(i);
 
-            let weights : Matrix = MatrixBasics::from_raw_felt(@fmatrix);
-            let biaises : Vector = VectorBasics::from_raw_felt(@fvector);
-            
-            result.append( DenseLayer {
-                built: true,
-                input_shape: weights.dimX(),
-                output_shape: biaises.len(),
-                activation_function: activation,
-                cache_input: MatrixBasics::zeros((0, 0)),
-                cache_z: MatrixBasics::zeros((0, 0)),
-                cache_output: MatrixBasics::zeros((0, 0)),
+            let weights: Matrix = MatrixBasics::from_raw_felt(@fmatrix);
+            let biaises: Vector = VectorBasics::from_raw_felt(@fvector);
 
-                weights: weights,
-                biaises: biaises,
-            });
+            result
+                .append(
+                    DenseLayer {
+                        built: true,
+                        input_shape: weights.dimX(),
+                        output_shape: biaises.len(),
+                        activation_function: activation,
+                        cache_input: MatrixBasics::zeros((0, 0)),
+                        cache_z: MatrixBasics::zeros((0, 0)),
+                        cache_output: MatrixBasics::zeros((0, 0)),
+                        weights: weights,
+                        biaises: biaises,
+                    }
+                );
 
             i += 1;
         };
 
-        Sequential {
-            layers: result.span(),
-            optimizer: DEFAULT_SGD,
-            history: array![]
-        }
+        Sequential { layers: result.span(), optimizer: DEFAULT_SGD, history: array![] }
     }
 
     fn init_from_wfloat(
-        layers: Span<( Span<Span<WFloat>>, Span<WFloat>, ActivationFunction )>,
-        optimizer: SGD
+        layers: Span<(Span<Span<WFloat>>, Span<WFloat>, ActivationFunction)>, optimizer: SGD
     ) -> Sequential {
         let mut result = ArrayTrait::new();
 
         let mut i = 0;
         loop {
-            if i == layers.len() { break(); }
-            
+            if i == layers.len() {
+                break ();
+            }
+
             let (fmatrix, fvector, activation) = *layers.at(i);
 
-            let weights : Matrix = MatrixBasics::from_wfloat(@fmatrix);
-            let biaises : Vector = VectorBasics::from_wfloat(@fvector);
-            
-            result.append( DenseLayer {
-                built: true,
-                input_shape: weights.dimX(),
-                output_shape: biaises.len(),
-                activation_function: activation,
-                cache_input: MatrixBasics::zeros((0, 0)),
-                cache_z: MatrixBasics::zeros((0, 0)),
-                cache_output: MatrixBasics::zeros((0, 0)),
+            let weights: Matrix = MatrixBasics::from_wfloat(@fmatrix);
+            let biaises: Vector = VectorBasics::from_wfloat(@fvector);
 
-                weights: weights,
-                biaises: biaises,
-            });
+            result
+                .append(
+                    DenseLayer {
+                        built: true,
+                        input_shape: weights.dimX(),
+                        output_shape: biaises.len(),
+                        activation_function: activation,
+                        cache_input: MatrixBasics::zeros((0, 0)),
+                        cache_z: MatrixBasics::zeros((0, 0)),
+                        cache_output: MatrixBasics::zeros((0, 0)),
+                        weights: weights,
+                        biaises: biaises,
+                    }
+                );
 
             i += 1;
         };
 
-        Sequential {
-            layers: result.span(),
-            optimizer: DEFAULT_SGD,
-            history: array![]
-        }
+        Sequential { layers: result.span(), optimizer: DEFAULT_SGD, history: array![] }
     }
 
     fn init_from_storage(
-        layers: Span<( Matrix, Vector, ActivationFunction )>,
-        optimizer: SGD
+        layers: Span<(Matrix, Vector, ActivationFunction)>, optimizer: SGD
     ) -> Sequential {
         let mut result = ArrayTrait::new();
 
         let mut i = 0;
         loop {
-            if i == layers.len() { break(); }
-            
+            if i == layers.len() {
+                break ();
+            }
+
             let (weights, biaises, activation) = *layers.at(i);
 
-            result.append( DenseLayer {
-                built: true,
-                input_shape: weights.dimX(),
-                output_shape: biaises.len(),
-                activation_function: activation,
-                cache_input: MatrixBasics::zeros((0, 0)),
-                cache_z: MatrixBasics::zeros((0, 0)),
-                cache_output: MatrixBasics::zeros((0, 0)),
-
-                weights: weights,
-                biaises: biaises,
-            });
+            result
+                .append(
+                    DenseLayer {
+                        built: true,
+                        input_shape: weights.dimX(),
+                        output_shape: biaises.len(),
+                        activation_function: activation,
+                        cache_input: MatrixBasics::zeros((0, 0)),
+                        cache_z: MatrixBasics::zeros((0, 0)),
+                        cache_output: MatrixBasics::zeros((0, 0)),
+                        weights: weights,
+                        biaises: biaises,
+                    }
+                );
 
             i += 1;
         };
 
-        Sequential {
-            layers: result.span(),
-            optimizer: DEFAULT_SGD,
-            history: array![]
-        }
+        Sequential { layers: result.span(), optimizer: DEFAULT_SGD, history: array![] }
     }
 }
 
@@ -496,11 +486,11 @@ pub impl SequentialBasics of ISequentialBasics {
 #[derive()]
 pub impl LayerDisplay of Display<DenseLayer> {
     fn fmt(self: @DenseLayer, ref f: Formatter) -> Result<(), Error> {
-        let mut result : ByteArray = "Layer\n"; 
+        let mut result: ByteArray = "Layer\n";
         result.append(@SEP());
         result.append(@"\n");
 
-        result.append(@format!("{}\n",self.weights));
+        result.append(@format!("{}\n", self.weights));
         result.append(@format!("{}", self.biaises));
 
         write!(f, "{}", result)
@@ -510,14 +500,16 @@ pub impl LayerDisplay of Display<DenseLayer> {
 #[derive()]
 pub impl SequentialDisplay of Display<Sequential> {
     fn fmt(self: @Sequential, ref f: Formatter) -> Result<(), Error> {
-        let mut result : ByteArray = "Sequential full description\n"; 
+        let mut result: ByteArray = "Sequential full description\n";
         result.append(@SEP());
         result.append(@"\n");
 
         let mut i = 0;
         loop {
-            if i == (*self.layers).len() { break(); }
-            
+            if i == (*self.layers).len() {
+                break ();
+            }
+
             let value = (*self.layers).at(i);
             result.append(@format!("{}\n", value));
 

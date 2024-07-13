@@ -25,7 +25,13 @@ def from_hex(x : str) -> int:
     return int(x, 16)
 
 def matrix_to_wfloat(matrix) :
-    return np.array([np.array([wfloat(x) for x in H]) for H in matrix])
+    x = "array!["
+    for line in matrix :
+        x += "array!["
+        for e in line :
+            x += f"{wfloat(e)}, "
+        x = x[:-1] + "].span(), "
+    return x[:-1] + "].span()"
 
 def matrix_as_felt_string(matrix) -> str :
     result = f"{len(matrix)}, "

@@ -77,7 +77,7 @@ class DenseLayer(ILayer):
         weights = matrix_as_felt_string(self.W)
         biaises = vector_as_felt_string(self.b[0])
         activation = 0
-        return f"3, {weights}, {biaises}, {activation}"
+        return f"{weights}, {biaises}, {activation}"
 
 class Sequential:
     def __init__(self, layers: List[ILayer], optimizer: 'SGD') -> None:
@@ -141,37 +141,3 @@ class Sequential:
 class SGD:
     def __init__(self, learning_rate : float) -> None:
         self.learning_rate = learning_rate
-
-# VERIFICATIONS
-# ----------------------------------------------------------------------------------------------------------------
-
-def mnist_dataset() :
-    (X_train, y_train), (X_test, y_test) = mnist.load_data()
-
-    X_train = X_train.reshape(X_train.shape[0], -1).astype(np.float32) / 255.0
-    X_test = X_test.reshape(X_test.shape[0], -1).astype(np.float32) / 255.0
-
-    encoder = OneHotEncoder(sparse_output=False)
-    y_train = encoder.fit_transform(y_train.reshape(-1, 1))
-    y_test = encoder.transform(y_test.reshape(-1, 1))
-
-    X_train, y_train, X_test, y_test
-
-def mnist_case():
-    X_train, y_train, X_test, y_test = mnist_dataset()
-
-    layers = [
-        DenseLayer(input_shape=784, output_shape=15, activation="ReLU"), 
-        DenseLayer(output_shape=15, activation="ReLU"), 
-        DenseLayer(output_shape=10, activation="ReLU")
-    ]
-
-    network = Sequential(layers, SGD(learning_rate=0.01))
-    network.build()
-    print(f"Num params: {network.num_params()}")
-
-    network.train(X_train, y_train, epochs=30, batch_size=64, verbose=True)
-
-    predictions = network.forward(X_test)
-    loss = network.mse_loss(predictions, y_test)
-    print(f"Final loss on test set: {loss}")
