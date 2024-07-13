@@ -77,11 +77,18 @@ fn build_neural_network() {
 fn verify_network_() {
     let layers : Span<DenseLayer> = array![
         DenseLayerBasics::init( 
-            input_shape: Option::Some(3),
-            output_shape: 4,
+            input_shape: Option::Some(1),
+            output_shape: 10,
             activation_function: ActivationFunction::ReLU,
             seed: Option::None
-         )
+        ),
+        DenseLayerBasics::add( 
+            output_shape: 10,
+            activation_function: ActivationFunction::ReLU,
+        ),        DenseLayerBasics::add( 
+            output_shape: 3,
+            activation_function: ActivationFunction::ReLU,
+        ),
     ].span();
     
     let mut model = SequentialBasics::init(
@@ -91,7 +98,8 @@ fn verify_network_() {
     println!("{model}");
     
     let X = MatrixBasics::from_i128(@array![
-    array![100, 100, 100].span(),
+        array![1].span()
+    // array![100, 100, 100].span(),
     // array![0, 3, 2].span(),
     // array![4, 2, 1].span(),
     // array![5, 2, 1].span(),
@@ -107,19 +115,22 @@ fn verify_network_() {
     println!("y = \n{y}");
 
     let someY = MatrixBasics::from_i128(@array![
+        array![1, 3, 5].span(),
+        
         // array![3, 5, 2, 4 ].span(),
         // array![3, 9, 1, 2 ].span(),
         // array![5, 9, 1, 2 ].span(),
         // array![5, 9, 1, 2 ].span(),
         // array![5, 5, 2, 4 ].span(),
-        array![1, 1, 1, 1].span(),
+        // 
+        // array![1, 1, 1, 1].span(),
         // array![1, 3, 5, 1].span(),
         // array![1, 3, 5, 1].span(),
         // array![1, 3, 5, 1].span(),
         // array![1, 3, 5, 1].span()
     ].span());
 
-    model.train(@X, @someY, 100, Option::None);
+    model.train(@X, @someY, 30, Option::None);
 
     println!("trained model");
 
