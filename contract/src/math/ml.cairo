@@ -11,7 +11,7 @@ use super::wfloat::{
 use super::vector::{Vector, VectorBasics};
 use super::matrix::{Matrix, MatrixBasics};
 use super::function::{exp};
-use super::component_lambda::{Exponential, ReLU, ReLUDerivative};
+use super::component_lambda::{Exponential, LambdaActivation, LambdaActivationDerivative};
 use super::random::{default_seed, lcg_rand, normalize_lgn_rand, normalize_lgn_rand_11};
 
 use core::fmt::{Display, Formatter, Error};
@@ -45,6 +45,7 @@ pub enum LayerType {
 #[derive(Copy, Drop, Hash, Serde, starknet::Store)]
 pub enum ActivationFunction {
     ReLU,
+    Sigmoid,
     SoftMax
 }
 
@@ -54,6 +55,14 @@ pub fn relu(x: @WFloat) -> WFloat {
     } else {
         ZERO_WFLOAT
     }
+}
+
+pub fn sigmoid(x : @WFloat) -> WFloat {
+    (ONE_WFLOAT + exp(@(ZERO_WFLOAT - *x))).inv()
+}
+
+pub fn sigmoid_derivative(x : @WFloat) -> WFloat {
+    sigmoid(x) * (ONE_WFLOAT - sigmoid(x))
 }
 
 pub fn relu_derivative(x: @WFloat) -> WFloat {
@@ -116,7 +125,7 @@ pub struct DenseLayer {
     built: bool,
     input_shape: usize,
     output_shape: usize,
-    activationFunction: ActivationFunction,
+    activation_function: ActivationFunction,
     cache_input: Matrix,
     cache_z: Matrix,
     cache_output: Matrix,
@@ -153,7 +162,7 @@ pub impl DenseLayerBasics of IDenseLayerBasics {
             built: false,
             input_shape: 0,
             output_shape: output_shape,
-            activationFunction: activation_function,
+            activation_function: activation_function,
             cache_input: MatrixBasics::zeros((0, 0)),
             cache_z: MatrixBasics::zeros((0, 0)),
             cache_output: MatrixBasics::zeros((0, 0)),
@@ -207,13 +216,7 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
     fn forward(ref self: DenseLayer, X: Matrix) -> Matrix {
         self.cache_input = X;
         self.cache_z = (X.dot(@self.weights)).row_wise_addition(@self.biaises);
-        self.cache_output = self.cache_z.apply(
-                match self.activationFunction {
-                    ActivationFunction::ReLU => ReLU {},
-                    // TODO: apply softmax row-wise 
-                    ActivationFunction::SoftMax => panic!("Not Implemented")
-                }
-            );
+        self.cache_output = self.cache_z.apply( LambdaActivation { activation_function: self.activation_function } );
         self.cache_output
     }
 
@@ -224,13 +227,7 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
         let dZ = dY
             * self
                 .cache_z
-                .apply(
-                    match self.activationFunction {
-                        ActivationFunction::ReLU => ReLUDerivative {},
-                        // TODO: apply softmax row-wise 
-                        ActivationFunction::SoftMax => panic!("Not Implemented")
-                    }
-                );
+                .apply( LambdaActivationDerivative { activation_function: self.activation_function } );
 
         let dW = (self.cache_input.transpose()).dot(@dZ).divide_by(m_float);
         let dB = dZ.sum().divide_by(m_float);

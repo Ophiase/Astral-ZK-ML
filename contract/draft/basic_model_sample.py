@@ -34,7 +34,10 @@ class DenseLayer(ILayer):
             self.input_shape = input_shape
         self.W = np.random.randn(self.input_shape, self.output_shape) * 0.01
         self.b = np.zeros((1, self.output_shape))
-        if self.activation_name == "ReLU":
+        if self.activation_name == "Sigmoid":
+            self.activation = lambda x: 1 / (1 + np.exp(-x))
+            self.activation_derivative = lambda x: self.activation(x) * (1 - self.activation(x))
+        elif self.activation_name == "ReLU":
             self.activation = lambda x: np.maximum(0, x)
             self.activation_derivative = lambda x: (x > 0).astype(float)
         elif self.activation_name == "Softmax":
@@ -51,19 +54,11 @@ class DenseLayer(ILayer):
         return self.output
 
     def backward(self, dY: np.ndarray, learning_rate: float) -> np.ndarray:
-        print("---")
         m = dY.shape[0]
-        print(dY.shape)
-        print(self.activation_derivative(self.z).shape)
-        print(self.z.shape)
         dZ = dY * self.activation_derivative(self.z)
-        print(dZ.shape)
         dW = np.dot(self.input.T, dZ) / m
-        print(dW.shape)
         dB = np.sum(dZ, axis=0, keepdims=True) / m
-        print(dB.shape)
         dX = np.dot(dZ, self.W.T)
-        print(dX.shape)
         
         self.W -= learning_rate * dW
         self.b -= learning_rate * dB

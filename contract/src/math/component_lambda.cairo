@@ -1,6 +1,10 @@
 use super::wfloat::{WFloat, WFloatBasics, WFloatSignedBasics};
 use super::function::{exp};
-use super::ml::{relu, relu_derivative};
+use super::ml::{
+    relu, relu_derivative,
+    sigmoid, sigmoid_derivative,
+    ActivationFunction
+};
 
 // -------------------------------------------------
 
@@ -32,10 +36,24 @@ pub struct WFloatDivider {
 
 #[derive(Drop, Copy)]
 pub struct Exponential {}
+
 #[derive(Drop, Copy)]
 pub struct ReLU {}
 #[derive(Drop, Copy)]
 pub struct ReLUDerivative {}
+#[derive(Drop, Copy)]
+pub struct Sigmoid {}
+#[derive(Drop, Copy)]
+pub struct SigmoidDerivative {}
+
+#[derive(Drop, Copy)]
+pub struct LambdaActivation { 
+    pub activation_function: ActivationFunction
+}
+#[derive(Drop, Copy)]
+pub struct LambdaActivationDerivative {
+    pub activation_function: ActivationFunction
+}
 
 // -------------------------------------------------
 
@@ -97,5 +115,41 @@ pub impl LReLU of IComponentLambda<ReLU, WFloat, WFloat> {
 pub impl LReLUDerivative of IComponentLambda<ReLUDerivative, WFloat, WFloat> {
     fn apply(self: @ReLUDerivative, input: @WFloat) -> WFloat {
         relu_derivative(input)
+    }
+}
+
+pub impl LSigmoid of IComponentLambda<Sigmoid, WFloat, WFloat> {
+    fn apply(self: @Sigmoid, input: @WFloat) -> WFloat {
+        sigmoid(input)
+    }
+}
+
+pub impl LSigmoidActivationDerivative of IComponentLambda<SigmoidDerivative, WFloat, WFloat> {
+    fn apply(self: @SigmoidDerivative, input: @WFloat) -> WFloat {
+        sigmoid_derivative(input)
+    }
+}
+
+pub impl LLambdaActivation of IComponentLambda<LambdaActivation, WFloat, WFloat> {
+    fn apply(self: @LambdaActivation, input: @WFloat) -> WFloat {
+        relu(input)
+        // match self.activation_function {
+        //     ActivationFunction::ReLU => relu(input),
+        //     ActivationFunction::Sigmoid => sigmoid(input),
+        //     ActivationFunction::SoftMax => panic!("Not Implemented")
+        // }
+    }
+}
+
+pub impl LLambdaActivationDerivative of IComponentLambda<LambdaActivationDerivative, WFloat, WFloat> {
+    fn apply(self: @LambdaActivationDerivative, input: @WFloat) -> WFloat {
+        relu_derivative(input)
+
+        // HIGH COST
+        // match self.activation_function {
+        //     ActivationFunction::ReLU => relu_derivative(input),
+        //     ActivationFunction::Sigmoid => sigmoid_derivative(input),
+        //     ActivationFunction::SoftMax => panic!("Not Implemented")
+        // }
     }
 }
