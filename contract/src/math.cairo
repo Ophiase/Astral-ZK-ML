@@ -12,5 +12,5 @@ pub mod vector;
 pub mod matrix;
 
 // DATA SCIENCE MODULES
-// pub mod statistics;
-// pub mod ml;
+pub mod statistics;
+pub mod ml;
