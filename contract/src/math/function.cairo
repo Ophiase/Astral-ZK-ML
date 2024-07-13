@@ -1,14 +1,14 @@
 use super::wfloat::{
-    WFloat, WFloatBasics,
-    ZERO_WFLOAT, ONE_WFLOAT, TWO_WFLOAT, NEG_WFLOAT, HALF_WFLOAT, DECIMAL_WFLOAT, 
+    WFloat, WFloatBasics, ZERO_WFLOAT, ONE_WFLOAT, TWO_WFLOAT, NEG_WFLOAT, HALF_WFLOAT,
+    DECIMAL_WFLOAT,
 };
 
 // -------------------------------------------------
 // BASIC FUNCTIONS
 // -------------------------------------------------
 
-const MAX_SQRT_ITERATIONS : usize = 50;
-pub fn sqrt(value : WFloat) -> WFloat {
+const MAX_SQRT_ITERATIONS: usize = 50;
+pub fn sqrt(value: WFloat) -> WFloat {
     if (value == ZERO_WFLOAT) {
         return ZERO_WFLOAT;
     }
@@ -19,7 +19,7 @@ pub fn sqrt(value : WFloat) -> WFloat {
     let mut i = 0;
     loop {
         if g == g2 || i == MAX_SQRT_ITERATIONS {
-            break(g);
+            break (g);
         }
 
         let n = value / g;
@@ -31,7 +31,7 @@ pub fn sqrt(value : WFloat) -> WFloat {
 }
 
 #[inline]
-pub fn max(lhs : WFloat, rhs : WFloat) -> WFloat {
+pub fn max(lhs: WFloat, rhs: WFloat) -> WFloat {
     if lhs > rhs {
         lhs
     } else {
@@ -40,7 +40,7 @@ pub fn max(lhs : WFloat, rhs : WFloat) -> WFloat {
 }
 
 #[inline]
-pub fn min(lhs : WFloat, rhs : WFloat) -> WFloat {
+pub fn min(lhs: WFloat, rhs: WFloat) -> WFloat {
     if lhs < rhs {
         lhs
     } else {
@@ -55,7 +55,9 @@ pub fn exp(x: @WFloat) -> WFloat {
     let mut n = ONE_WFLOAT;
     let mut i = 0;
     loop {
-        if i == 100 { break(); }
+        if i == 100 {
+            break ();
+        }
         term = term * (*x / n);
         sum = sum + term;
         n = n + ONE_WFLOAT;

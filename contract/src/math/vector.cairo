@@ -10,26 +10,17 @@ use super::signed::{
 };
 
 use super::wfloat::{
-    WFloat, WFloatBasics,
-    ZERO_WFLOAT, ONE_WFLOAT, NEG_WFLOAT, HALF_WFLOAT, DECIMAL_WFLOAT, 
+    WFloat, WFloatBasics, ZERO_WFLOAT, ONE_WFLOAT, NEG_WFLOAT, HALF_WFLOAT, DECIMAL_WFLOAT,
 };
 use super::component_lambda::{
-    IComponentLambda,
-    RawFeltAsWFloat, RawI128AsWFloat, I128AsWFloat, U128AsWFloat, WFloatAsRawFelt,
+    IComponentLambda, RawFeltAsWFloat, RawI128AsWFloat, I128AsWFloat, U128AsWFloat, WFloatAsRawFelt,
     WFloatMultiplier, WFloatDivider
 };
 use super::function;
-use super::function::{
-    sqrt
-};
+use super::function::{sqrt};
 
-use super::algebra::{
-    NeutralElement, Invertible,
-    pow, pow_monoid
-};
-use super::random::{
-    lcg_rand, normalize_lgn_rand_11, normalize_lgn_rand
-};
+use super::algebra::{NeutralElement, Invertible, pow, pow_monoid};
+use super::random::{lcg_rand, normalize_lgn_rand_11, normalize_lgn_rand};
 
 // -------------------------------------------------
 // VECTOR
@@ -45,9 +36,9 @@ pub struct Vector {
 fn vector_to_string(vector: @Vector) -> ByteArray {
     let content = vector.content;
 
-    let mut result : ByteArray = "";
-    let begin_line : ByteArray = "[";
-    let end_line : ByteArray = "]";
+    let mut result: ByteArray = "";
+    let begin_line: ByteArray = "[";
+    let end_line: ByteArray = "]";
 
     result.append(@begin_line);
     let mut i = 0;
@@ -55,7 +46,7 @@ fn vector_to_string(vector: @Vector) -> ByteArray {
         if i == (*content).len() {
             break ();
         }
-        
+
         let e = *(*content).at(i);
         result.append(@format!("{e}, "));
 
@@ -82,17 +73,16 @@ pub impl VectorAdd of Add<Vector> {
         let left = lhs.content;
         let right = rhs.content;
 
-        assert!(
-            left.len() == right.len(), 
-            "add error: different size"
-        );
+        assert!(left.len() == right.len(), "add error: different size");
 
-        let length = left.len(); 
+        let length = left.len();
 
         let mut i = 0;
         loop {
-            if i == length { break(); }
-            
+            if i == length {
+                break ();
+            }
+
             let component = *left.at(i) + *right.at(i);
             result.append(component);
 
@@ -110,17 +100,16 @@ pub impl VectorSub of Sub<Vector> {
         let left = lhs.content;
         let right = rhs.content;
 
-        assert!(
-            left.len() == right.len(), 
-            "add error: different size"
-        );
+        assert!(left.len() == right.len(), "add error: different size");
 
-        let length = left.len(); 
+        let length = left.len();
 
         let mut i = 0;
         loop {
-            if i == length { break(); }
-            
+            if i == length {
+                break ();
+            }
+
             let component = *left.at(i) - *right.at(i);
             result.append(component);
 
@@ -139,17 +128,16 @@ pub impl VectorMul of Mul<Vector> {
         let left = lhs.content;
         let right = rhs.content;
 
-        assert!(
-            left.len() == right.len(), 
-            "add error: different size"
-        );
+        assert!(left.len() == right.len(), "add error: different size");
 
-        let length = left.len(); 
+        let length = left.len();
 
         let mut i = 0;
         loop {
-            if i == length { break(); }
-            
+            if i == length {
+                break ();
+            }
+
             let component = *left.at(i) * *right.at(i);
             result.append(component);
 
@@ -167,17 +155,16 @@ pub impl VectorDiv of Div<Vector> {
         let left = lhs.content;
         let right = rhs.content;
 
-        assert!(
-            left.len() == right.len(), 
-            "add error: different size"
-        );
+        assert!(left.len() == right.len(), "add error: different size");
 
-        let length = left.len(); 
+        let length = left.len();
 
         let mut i = 0;
         loop {
-            if i == length { break(); }
-            
+            if i == length {
+                break ();
+            }
+
             let component = *left.at(i) * *right.at(i);
             result.append(component);
 
@@ -205,7 +192,7 @@ pub impl VectorBasics of IVectorBasics {
     }
 
     #[inline]
-    fn at(self: @Vector, i : usize) -> WFloat {
+    fn at(self: @Vector, i: usize) -> WFloat {
         *(*self).content.at(i)
     }
 
@@ -216,7 +203,9 @@ pub impl VectorBasics of IVectorBasics {
         let mut result = ArrayTrait::new();
         let mut i = 0;
         loop {
-            if i == size { break(); }
+            if i == size {
+                break ();
+            }
             result.append(*value);
             i += 1;
         };
@@ -239,8 +228,9 @@ pub impl VectorBasics of IVectorBasics {
         let mut result = ArrayTrait::new();
         let mut i = 0;
         loop {
-            if i == size { break(); }
-            else if i == position {
+            if i == size {
+                break ();
+            } else if i == position {
                 result.append(ONE_WFLOAT);
             } else {
                 result.append(ZERO_WFLOAT);
@@ -259,7 +249,9 @@ pub impl VectorBasics of IVectorBasics {
 
         let mut i = 0;
         loop {
-            if i == self.len() { break(); }
+            if i == self.len() {
+                break ();
+            }
 
             let component = lambda.apply(content.at(i));
             result.append(component);
@@ -270,15 +262,15 @@ pub impl VectorBasics of IVectorBasics {
         Vector { content: result.span() }
     }
 
-    fn from_lambda<
-        T, U,
-        +Drop<T>, +Destruct<T>, +IComponentLambda<T, U, WFloat>>(
-        content : @Span<U>, lambda: T
+    fn from_lambda<T, U, +Drop<T>, +Destruct<T>, +IComponentLambda<T, U, WFloat>>(
+        content: @Span<U>, lambda: T
     ) -> Vector {
         let mut result = ArrayTrait::new();
         let mut i = 0;
         loop {
-            if i == (*content).len() { break(); }
+            if i == (*content).len() {
+                break ();
+            }
 
             let component = lambda.apply((*content).at(i));
             result.append(component);
@@ -288,18 +280,17 @@ pub impl VectorBasics of IVectorBasics {
         Vector { content: result.span() }
     }
 
-    fn apply_extern<
-        T, U,
-        +Drop<U>,
-        +Drop<T>, +Destruct<T>, +IComponentLambda<T, WFloat, U>>(
-        self : @Vector, lambda: T
+    fn apply_extern<T, U, +Drop<U>, +Drop<T>, +Destruct<T>, +IComponentLambda<T, WFloat, U>>(
+        self: @Vector, lambda: T
     ) -> Span<U> {
         let mut result = ArrayTrait::new();
         let content = *(self.content);
 
         let mut i = 0;
         loop {
-            if i == content.len() { break(); }
+            if i == content.len() {
+                break ();
+            }
 
             let component = lambda.apply(content.at(i));
             result.append(component);
@@ -311,7 +302,7 @@ pub impl VectorBasics of IVectorBasics {
     }
 
     fn from_raw_felt(values: @Span<felt252>) -> Vector {
-        VectorBasics::from_lambda(values, RawFeltAsWFloat{})
+        VectorBasics::from_lambda(values, RawFeltAsWFloat {})
     }
 
     // TODO:
@@ -321,22 +312,22 @@ pub impl VectorBasics of IVectorBasics {
 
     #[inline]
     fn from_raw_i128(values: @Span<i128>) -> Vector {
-        VectorBasics::from_lambda(values, RawI128AsWFloat{})
+        VectorBasics::from_lambda(values, RawI128AsWFloat {})
     }
 
     #[inline]
     fn from_i128(values: @Span<i128>) -> Vector {
-        VectorBasics::from_lambda(values, I128AsWFloat{})
+        VectorBasics::from_lambda(values, I128AsWFloat {})
     }
 
     #[inline]
     fn from_u128(values: @Span<u128>) -> Vector {
-        VectorBasics::from_lambda(values, U128AsWFloat{})
+        VectorBasics::from_lambda(values, U128AsWFloat {})
     }
 
     #[inline]
     fn as_felt(self: @Vector) -> Span<felt252> {
-        self.apply_extern(WFloatAsRawFelt {} )
+        self.apply_extern(WFloatAsRawFelt {})
     }
 
     // Misc
@@ -346,28 +337,30 @@ pub impl VectorBasics of IVectorBasics {
         let mut result = ZERO_WFLOAT;
         let mut i = 0;
         loop {
-            if i == self.len() { break(); }
-            result = result + self.at(i);            
+            if i == self.len() {
+                break ();
+            }
+            result = result + self.at(i);
             i += 1;
         };
         result
     }
 
-    fn mean(self : @Vector) -> WFloat {
+    fn mean(self: @Vector) -> WFloat {
         self.sum() / WFloatBasics::from_u64(self.len().into())
     }
 
     #[inline]
-    fn scale(self: @Vector, factor : WFloat) -> Vector {
-        self.apply( WFloatMultiplier { factor: factor } )
+    fn scale(self: @Vector, factor: WFloat) -> Vector {
+        self.apply(WFloatMultiplier { factor: factor })
     }
 
     #[inline]
-    fn divide_by(self: @Vector, factor : WFloat) -> Vector {
-        self.apply( WFloatDivider { factor: factor } )
+    fn divide_by(self: @Vector, factor: WFloat) -> Vector {
+        self.apply(WFloatDivider { factor: factor })
     }
 
-    fn dot(self: @Vector, rhs : @Vector) -> WFloat {
+    fn dot(self: @Vector, rhs: @Vector) -> WFloat {
         (*self * *rhs).sum()
     }
 
@@ -385,7 +378,9 @@ pub impl VectorBasics of IVectorBasics {
         let mut max = (*self).at(0);
         let mut i = 0;
         loop {
-            if i == self.len() { break(); }
+            if i == self.len() {
+                break ();
+            }
             let current = (*self).at(i);
             max = function::max(current, max);
             i += 1;
@@ -398,19 +393,21 @@ pub impl VectorBasics of IVectorBasics {
         let mut content = ArrayTrait::new();
         let mut i = 0;
         loop {
-            if i == self.len() { break(); }
-            
+            if i == self.len() {
+                break ();
+            }
+
             let current = (*self).at(i);
             if current == max {
                 content.append(ONE_WFLOAT);
             } else {
                 content.append(ZERO_WFLOAT);
             }
-            
+
             i += 1;
         };
-        Vector { content : content.span() }
-    }    
+        Vector { content: content.span() }
+    }
 
     // Returns the first occurence
     fn argmax(self: @Vector) -> usize {
@@ -418,13 +415,15 @@ pub impl VectorBasics of IVectorBasics {
         let mut i = 0;
 
         loop {
-            if i == self.len() { panic!("max not found"); }
-            
+            if i == self.len() {
+                panic!("max not found");
+            }
+
             let current = (*self).at(i);
             if current == max {
-                break(i);
+                break (i);
             }
-            
+
             i += 1;
         }
     }
@@ -435,8 +434,10 @@ pub impl VectorBasics of IVectorBasics {
         let mut result = ArrayTrait::new();
         let mut i = 0;
         loop {
-            if i == dimension { break(); }
-            result.append( normalize_lgn_rand_11(seed) );
+            if i == dimension {
+                break ();
+            }
+            result.append(normalize_lgn_rand_11(seed));
             seed = lcg_rand(seed);
             i += 1;
         };

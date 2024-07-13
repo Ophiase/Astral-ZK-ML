@@ -31,12 +31,12 @@ pub const TWO_WFLOAT_AS_I128: i128 = 2_000_000; // 1e6 instead of  1e18
 pub const HALF_WFLOAT_AS_I128: i128 = 500_000; // 0.5e6 instead of 0.5e18
 pub const DECIMAL_WFLOAT_AS_I128: i128 = 100_000; // 0.1e6 instead of
 
-pub const ZERO_WFLOAT : WFloat = WFloat { value: 0 };
-pub const NEG_WFLOAT : WFloat = WFloat { value: NEG_WFLOAT_AS_I128 };
-pub const ONE_WFLOAT : WFloat = WFloat { value: ONE_WFLOAT_AS_I128 };
-pub const TWO_WFLOAT : WFloat = WFloat { value: TWO_WFLOAT_AS_I128 };
-pub const HALF_WFLOAT : WFloat = WFloat { value : HALF_WFLOAT_AS_I128 };
-pub const DECIMAL_WFLOAT : WFloat = WFloat { value : DECIMAL_WFLOAT_AS_I128 };
+pub const ZERO_WFLOAT: WFloat = WFloat { value: 0 };
+pub const NEG_WFLOAT: WFloat = WFloat { value: NEG_WFLOAT_AS_I128 };
+pub const ONE_WFLOAT: WFloat = WFloat { value: ONE_WFLOAT_AS_I128 };
+pub const TWO_WFLOAT: WFloat = WFloat { value: TWO_WFLOAT_AS_I128 };
+pub const HALF_WFLOAT: WFloat = WFloat { value: HALF_WFLOAT_AS_I128 };
+pub const DECIMAL_WFLOAT: WFloat = WFloat { value: DECIMAL_WFLOAT_AS_I128 };
 
 // not optimized, for debug purpose
 fn lfill(string: ByteArray, n_digits: usize, character: ByteArray) -> ByteArray {
@@ -197,7 +197,7 @@ pub impl WFloatBasics of IWFloatBasics {
 
     #[inline]
     fn from_u64(value: u64) -> WFloat {
-        let value : i128 = value.try_into().unwrap();
+        let value: i128 = value.try_into().unwrap();
         WFloat { value: value * ONE_WFLOAT_AS_I128 }
     }
 
