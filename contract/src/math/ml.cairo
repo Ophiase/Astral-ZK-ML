@@ -1,3 +1,5 @@
+use core::array::ArrayTrait;
+use core::array::SpanTrait;
 use astral_zkml::math::matrix::IMatrixBasics;
 use core::option::OptionTrait;
 use astral_zkml::math::algebra::Invertible;
@@ -104,6 +106,10 @@ trait ILayer<T> {
     fn build(ref self : T, input_shape: usize, seed: Option<u64>) -> ();
     fn forward(ref self : T, X: Matrix) -> Matrix;
     fn backward(ref self : T, dY: Matrix, learning_rate: WFloat) -> Matrix;
+
+    fn get_input_shape(self: @T) -> usize;
+    fn get_output_shape(self: @T) -> usize;
+
     fn num_params(ref self : @T) -> usize;
 }
 
@@ -123,11 +129,13 @@ struct DenseLayer {
     biaises: Vector,
 }
 
+#[derive(Copy, Drop)]
 struct SGD {
     learning_rate: WFloat,
     loss: LossFunctionType
 }
 
+#[derive(Copy, Drop)]
 pub struct Sequential {
     layers : Span<DenseLayer>,
     optimizer: SGD,
@@ -171,6 +179,14 @@ impl DenseLayerBasics of IDenseLayerBasics {
 }
 
 impl DenseLayerImpl of ILayer<DenseLayer> {
+    fn get_input_shape(self: @DenseLayer) -> usize {
+        (*self).input_shape
+    }
+
+    fn get_output_shape(self: @DenseLayer) -> usize {
+        (*self).output_shape
+    }
+
     fn build(ref self : DenseLayer, input_shape: usize, seed : Option<u64>) -> () {
         let seed = match seed {
             Option::Some(x) => x,
@@ -227,5 +243,83 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
 
 #[generate_trait]
 impl SequentialBasics of ISequentialBasics {
-    
+    fn build(ref self : Sequential, seed: Option<u64>) -> () {
+        let mut result = ArrayTrait::new();
+
+        let mut seed = match seed {
+            Option::Some(x) => x,
+            Option::None => default_seed
+        };
+
+        let mut input_shape = self.layers[0].get_input_shape();
+        let mut i = 1;
+        loop {
+            if i == self.layers.len() { break(); }
+            let mut value : DenseLayer = *self.layers.at(i);
+            value.build(input_shape, Option::Some(seed));
+            result.append(value);
+
+            i += 1;
+            input_shape = value.get_output_shape();
+            seed = lcg_rand(seed);
+        };
+
+        self.layers = result.span();
+    }
+
+    fn forward(ref self : Sequential, X : @Matrix) -> Matrix {
+        let mut result = ArrayTrait::new();
+        let mut output : Matrix = *X;
+
+        let mut i = 1;
+        loop {
+            if i == self.layers.len() { break(); }
+
+            let mut value : DenseLayer = *self.layers.at(i);
+            output = value.forward(output);
+            result.append(value);
+
+            i += 1;
+        };
+
+        self.layers = result.span();
+        output
+    }
+
+    // def backward(self, dY: np.ndarray) -> None:
+    //     for layer in reversed(self.layers):
+    //         dY = layer.backward(dY, self.optimizer.learning_rate)
+
+    // def train(
+    //         self, X: np.ndarray, y: np.ndarray, epochs: int, 
+    //         batch_size: int, verbose: bool = False) -> List[float]:
+        
+    //     self.loss_history = []
+    //     for epoch in range(epochs):
+    //         permutation = np.random.permutation(X.shape[0])
+    //         X_shuffled = X[permutation]
+    //         y_shuffled = y[permutation]
+
+    //         for i in range(0, X.shape[0], batch_size):
+    //             X_batch = X_shuffled[i:i + batch_size]
+    //             y_batch = y_shuffled[i:i + batch_size]
+    //             output = self.forward(X_batch)
+    //             loss = self.mse_loss(output, y_batch)
+    //             dY = output - y_batch
+    //             self.backward(dY)
+
+    //         predictions = self.forward(X)
+    //         loss = self.mse_loss(predictions, y)
+    //         self.loss_history.append(loss)
+
+    //         if verbose and epoch % 10 == 0:
+    //             print(f'Epoch {epoch+1}, Loss: {loss}')
+
+    //     return self.loss_history
+
+    // def mse_loss(self, predictions: np.ndarray, targets: np.ndarray) -> float:
+    //     # print("predictions", predictions)
+    //     return np.mean(np.square(predictions - targets))
+
+
 }
