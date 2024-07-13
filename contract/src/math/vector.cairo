@@ -262,6 +262,22 @@ pub impl VectorBasics of IVectorBasics {
         Vector { content: result.span() }
     }
 
+    fn from_wfloat(content: @Span<WFloat>) -> Vector {
+        let mut result = ArrayTrait::new();
+        let mut i = 0;
+        loop {
+            if i == (*content).len() {
+                break ();
+            }
+
+            let component = *(*content).at(i);
+            result.append(component);
+
+            i += 1;
+        };
+        Vector { content: result.span() }
+    }
+
     fn from_lambda<T, U, +Drop<T>, +Destruct<T>, +IComponentLambda<T, U, WFloat>>(
         content: @Span<U>, lambda: T
     ) -> Vector {

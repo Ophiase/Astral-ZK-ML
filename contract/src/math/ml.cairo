@@ -375,6 +375,83 @@ pub impl SequentialBasics of ISequentialBasics {
             self.train_epoch(X, y, batch_size);
             i += 1;
         };
+    
+    }
+
+    fn init_from_felt252(
+        layers: Span<( Span<Span<felt252>>, Span<felt252>, ActivationFunction )>,
+        optimizer: SGD
+    ) -> Sequential {
+        let mut result = ArrayTrait::new();
+
+        let mut i = 0;
+        loop {
+            if i == layers.len() { break(); }
+            
+            let (fmatrix, fvector, activation) = *layers.at(i);
+
+            let weights : Matrix = MatrixBasics::from_raw_felt(@fmatrix);
+            let biaises : Vector = VectorBasics::from_raw_felt(@fvector);
+            
+            result.append( DenseLayer {
+                built: true,
+                input_shape: weights.dimX(),
+                output_shape: biaises.len(),
+                activation_function: activation,
+                cache_input: MatrixBasics::zeros((0, 0)),
+                cache_z: MatrixBasics::zeros((0, 0)),
+                cache_output: MatrixBasics::zeros((0, 0)),
+
+                weights: weights,
+                biaises: biaises,
+            });
+
+            i += 1;
+        };
+
+        Sequential {
+            layers: result.span(),
+            optimizer: DEFAULT_SGD,
+            history: array![]
+        }
+    }
+
+    fn init_from_wfloat(
+        layers: Span<( Span<Span<WFloat>>, Span<WFloat>, ActivationFunction )>,
+        optimizer: SGD
+    ) -> Sequential {
+        let mut result = ArrayTrait::new();
+
+        let mut i = 0;
+        loop {
+            if i == layers.len() { break(); }
+            
+            let (fmatrix, fvector, activation) = *layers.at(i);
+
+            let weights : Matrix = MatrixBasics::from_wfloat(@fmatrix);
+            let biaises : Vector = VectorBasics::from_wfloat(@fvector);
+            
+            result.append( DenseLayer {
+                built: true,
+                input_shape: weights.dimX(),
+                output_shape: biaises.len(),
+                activation_function: activation,
+                cache_input: MatrixBasics::zeros((0, 0)),
+                cache_z: MatrixBasics::zeros((0, 0)),
+                cache_output: MatrixBasics::zeros((0, 0)),
+
+                weights: weights,
+                biaises: biaises,
+            });
+
+            i += 1;
+        };
+
+        Sequential {
+            layers: result.span(),
+            optimizer: DEFAULT_SGD,
+            history: array![]
+        }
     }
 }
 

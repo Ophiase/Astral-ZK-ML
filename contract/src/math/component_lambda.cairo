@@ -16,6 +16,9 @@ pub trait IComponentLambda<T, U, V> {
 // -------------------------------------------------
 
 #[derive(Drop, Copy)]
+pub struct Identity {}
+
+#[derive(Drop, Copy)]
 pub struct RawFeltAsWFloat {}
 #[derive(Drop, Copy)]
 pub struct RawI128AsWFloat {}
@@ -56,6 +59,12 @@ pub struct LambdaActivationDerivative {
 }
 
 // -------------------------------------------------
+
+pub impl LIdentity of IComponentLambda<Identity, WFloat, WFloat> {
+    fn apply(self: @RawFeltAsWFloat, input: @WFloat) -> WFloat {
+        *input
+    }
+}
 
 pub impl LRawFeltAsWFloat of IComponentLambda<RawFeltAsWFloat, felt252, WFloat> {
     fn apply(self: @RawFeltAsWFloat, input: @felt252) -> WFloat {

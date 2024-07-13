@@ -241,6 +241,25 @@ pub impl MatrixBasics of IMatrixBasics {
         Matrix { content: result.span() }
     }
 
+    fn from_wfloat(content: @Span<Span<WFloat>>) -> Matrix {
+        let dimX = (*content).len();
+
+        let mut result = ArrayTrait::new();
+        let mut i = 0;
+        loop {
+            if i == dimX {
+                break ();
+            }
+
+            let sub_result = VectorBasics::from_wfloat((*content).at(i));
+            result.append(sub_result);
+
+            i += 1;
+        };
+        Matrix { content: result.span() }
+    }
+
+
     fn from_lambda<T, U, +Copy<T>, +Drop<T>, +Destruct<T>, +IComponentLambda<T, U, WFloat>>(
         content: @Span<Span<U>>, lambda: T
     ) -> Matrix {
