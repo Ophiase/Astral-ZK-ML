@@ -109,5 +109,37 @@ fn matrix_works() -> () {
     // sep();
     // println!("{} x\n {} =\n {}", m2, m3, m2 * m3);
 
+    // let m4 = MatrixBasics::from_i128(@array![
+    //     array![1_i128, 2].span(),
+    //     array![3_i128, 4].span()
+    // ].span());
+
+    // let m5 = MatrixBasics::from_i128(@array![
+    //     array![1_i128, 2].span(),
+    //     array![3_i128, 4].span(),
+    //     array![2_i128, 1].span()
+    // ].span());
+
+    // sep();
+    // println!("{m4}");
+    // println!("{m5}");
+    // println!("{}", m5.dot(@m4));
+
+    // let m6 = MatrixBasics::from_i128(@array![
+    //     array![1_i128, 2].span(),
+    //     array![3_i128, 4].span(),
+    //     array![1_i128, 2].span()
+    // ].span());
+
+    // let m7 = MatrixBasics::from_i128(@array![
+    //     array![1_i128, 2, 1].span(),
+    //     array![3_i128, 4, 1].span(),
+    // ].span());
+
+    // sep();
+    // println!("{m6}");
+    // println!("{m7}");
+    // println!("{}", m7.dot(@m6));
+
     let _ = m1 + m2 + m3;
 }

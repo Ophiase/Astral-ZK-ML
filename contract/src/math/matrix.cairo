@@ -1,3 +1,5 @@
+use core::traits::Into;
+use core::array::ArrayTrait;
 use core::array::SpanTrait;
 use core::byte_array::ByteArrayTrait;
 use core::clone::Clone;
@@ -17,7 +19,8 @@ use super::vector::{
 };
 use super::component_lambda::{
     IComponentLambda,
-    RawFeltAsWFloat, RawI128AsWFloat, I128AsWFloat, U128AsWFloat, WFloatAsRawFelt
+    RawFeltAsWFloat, RawI128AsWFloat, I128AsWFloat, U128AsWFloat, WFloatAsRawFelt,
+    WFloatMultiplier
 };
 
 use super::algebra::{
@@ -393,15 +396,20 @@ pub impl MatrixBasics of IMatrixBasics {
     }
 
     fn transpose(self : @Matrix) -> Matrix {
-        let (dimX, dimY) = self.shape();        
+        let (_, dimY) = self.shape();        
         let mut result = ArrayTrait::new();
         let mut i = 0;
         loop {
-            if i == dimX { break(); }
-            result.append( self.get_ith_basis(dimY) );
+            if i == dimY { break(); }
+            result.append( self.get_ith_basis(i) );
             i += 1;
         };
         Matrix { content: result.span() }
+    }
+
+    #[inline]
+    fn scale(self: @Matrix, factor : WFloat) -> Matrix {
+        self.apply( WFloatMultiplier { factor: factor } )
     }
 
     fn dot_vector(self : @Matrix, vector : @Vector) -> Vector {
@@ -437,7 +445,7 @@ pub impl MatrixBasics of IMatrixBasics {
             if i == (*self).content.len() { break(); }
             
             let current = self.get_ith_line(i);
-            if i <= where {
+            if i < where {
                 left.append(current);
             } else {
                 right.append(current);
@@ -452,6 +460,15 @@ pub impl MatrixBasics of IMatrixBasics {
         )
     }
 
+    fn vertical_join(self: @Matrix, rhs : @Matrix) -> Matrix {
+        let mut result = ArrayTrait::new();
+        result.append_span(*self.content); 
+        result.append_span(*rhs.content);
+        Matrix {
+            content: result.span()
+        }
+    }
+
     fn horizontal_split(self: @Matrix, where : usize) -> (Matrix, Matrix) {
         let (dimX, dimY) = self.shape();
         
@@ -463,16 +480,18 @@ pub impl MatrixBasics of IMatrixBasics {
             
             let mut sub_left = ArrayTrait::new();
             let mut sub_right = ArrayTrait::new();
+            let current = self.get_ith_line(i);
 
             let mut j = 0;
             loop {
                 if j ==  dimY { break(); }
                 
-                let current = self.get_ith_line(i);
-                if i <= where {
-                    left.append(current);
+                let sub_current = current.at(j);
+                
+                if j < where {
+                    sub_left.append(sub_current);
                 } else {
-                    right.append(current);
+                    sub_right.append(sub_current);
                 }
 
                 j += 1;
@@ -489,44 +508,95 @@ pub impl MatrixBasics of IMatrixBasics {
             Matrix { content : right.span() }
         )
     }
+
+    fn horizontal_join(self: @Matrix, rhs : @Matrix) -> Matrix {
+        let mut result = ArrayTrait::new();
+
+        let mut i = 0;
+        loop {
+            if i == self.dimX() { break(); }
+            
+            let mut sub_result = ArrayTrait::new();
+            sub_result.append_span( *(*self).content.at(i).content );
+            sub_result.append_span( *(*rhs).content.at(i).content );
+            result.append( Vector { content : sub_result.span() } );
+
+            i += 1;
+        };
+
+        Matrix { content: result.span() }
+    }
  
-    // def matrix_multiply(A, B):
-    // n = len(A)
-    // if n == 1:
-    //     return [[A[0][0] * B[0][0]]]
-    
-    // # Diviser les matrices en sous-matrices
-    // mid = n // 2
-    // A11 = [row[:mid] for row in A[:mid]]
-    // A12 = [row[mid:] for row in A[:mid]]
-    // A21 = [row[:mid] for row in A[mid:]]
-    // A22 = [row[mid:] for row in A[mid:]]
-    
-    // B11 = [row[:mid] for row in B[:mid]]
-    // B12 = [row[mid:] for row in B[:mid]]
-    // B21 = [row[:mid] for row in B[mid:]]
-    // B22 = [row[mid:] for row in B[mid:]]
-    
-    // # Calculer récursivement les sous-produits
-    // C11 = matrix_add(matrix_multiply(A11, B11), matrix_multiply(A12, B21))
-    // C12 = matrix_add(matrix_multiply(A11, B12), matrix_multiply(A12, B22))
-    // C21 = matrix_add(matrix_multiply(A21, B11), matrix_multiply(A22, B21))
-    // C22 = matrix_add(matrix_multiply(A21, B12), matrix_multiply(A22, B22))
-    
-    // # Combiner les résultats
-    // C = C11 + C12 + C21 + C22
-    // return [C[i] + C[i+n] for i in range(n)]
+    fn naive_dot(self : @Matrix, rhs : @Matrix) -> Matrix {
+        let mut result = ArrayTrait::new();
 
-    // fn dot(self : @Matrix, rhs : @Matrix) -> Matrix {
-    //     let n = (*self).content.len();
-    //     if n == 1 {
-    //         return self.at(0, 0) * rhs.at(0, 0);
-    //     }
+        let rhs_transpose = rhs.transpose();
+        
+        let dimX = self.dimX();
+        let dimY = rhs.dimY();
+        
+        let mut i = 0;
+        loop {
+            if i == dimX { break(); }
 
+            let a = (*self).content.at(i);
 
+            let mut sub_result = ArrayTrait::new();
+            let mut j = 0;
+            loop {
+                if j == dimY { break(); }
+                
+                println!("at: {i} {j}");
+                let b = (rhs_transpose.content.at(j));
+                sub_result.append( a.dot(b) );
 
-    //     let mid = n / 2;
+                j += 1;
+            };
+            
+            result.append( Vector { content: sub_result.span() } );
 
+            i += 1;
+        };
 
-    // }
+        Matrix { content: result.span() }
+    }
+
+    fn dot(self : @Matrix, rhs : @Matrix) -> Matrix {
+        return self.naive_dot(rhs);
+
+        // let A = self;
+        // let B = rhs;
+
+        // let n = (*self).content.len();
+        // if n == 1 {
+        //     return Matrix { content : array![
+        //         Vector { content : array![A.at(0, 0) * B.at(0, 0)].span() }
+        //     ].span() };
+        // }
+
+        // if B.shape() == (1, 1) {
+        //     return A.scale(B.at(0, 0));
+        // }
+
+        // let mid = n / 2;
+        
+        // let (A1, A2) = A.vertical_split(mid);
+        // let (A11, A12) = A1.horizontal_split(mid);
+        // let (A21, A22) = A2.horizontal_split(mid);
+
+        // let (B1, B2) = B.vertical_split(mid);
+        // let (B11, B12) = B1.horizontal_split(mid);
+        // let (B21, B22) = B2.horizontal_split(mid);
+        
+        // // let C = C11 + C12 + C21 + C22;
+        // let C11 : Matrix = A11.dot(@B11) + A12.dot(@B21);
+        // let C12 : Matrix = A11.dot(@B12) + A12.dot(@B22);
+        // let C21 : Matrix = A21.dot(@B11) + A22.dot(@B21);
+        // let C22 : Matrix = A21.dot(@B12) + A22.dot(@B22);
+
+        // let C1 : Matrix = C11.horizontal_join(@C12);
+        // let C2 : Matrix = C21.horizontal_join(@C22);
+        
+        // C1.vertical_join(@C2)
+    }
 }
