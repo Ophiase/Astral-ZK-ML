@@ -6,6 +6,7 @@ from tensorflow.keras.datasets import mnist
 from typing import List, Tuple, Union
 
 from matplotlib import pyplot as plt
+from basic_conversions import matrix_as_felt_string, vector_as_felt_string
 
 # ----------------------------------------------------------------------------------------------------------------
 
@@ -20,6 +21,8 @@ class ILayer:
         raise NotImplementedError("Must implement backward method")
     
     def num_params(self) -> int: return 0
+
+    def serialize(self) -> str: return ""
 
 class DenseLayer(ILayer):
     def __init__(self, input_shape: int = None, output_shape: int = None, activation: str = None) -> None:
@@ -67,6 +70,14 @@ class DenseLayer(ILayer):
 
     def num_params(self) -> int:
         return np.prod(self.W.shape) + np.prod(self.b.shape)
+    
+    # we force ReLU activation for simplicity
+    # TODO: not force it
+    def serialize(self) -> str :
+        weights = matrix_as_felt_string(self.W)
+        biaises = vector_as_felt_string(self.b[0])
+        activation = 0
+        return f"3, {weights}, {biaises}, {activation}"
 
 class Sequential:
     def __init__(self, layers: List[ILayer], optimizer: 'SGD') -> None:
@@ -120,6 +131,12 @@ class Sequential:
 
     def num_params(self) -> int:
         return sum(layer.num_params() for layer in self.layers)
+    
+    def serialize(self) -> str:
+        result = f"{len(self.layers)}, "
+        for layer in self.layers:
+            result += f"{layer.serialize()}, "
+        return result[:-2]
 
 class SGD:
     def __init__(self, learning_rate : float) -> None:
