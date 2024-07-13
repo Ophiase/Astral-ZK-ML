@@ -77,7 +77,7 @@ pub impl LWFloatMultiplier of IComponentLambda<WFloatMultiplier, WFloat, WFloat>
 
 pub impl LWFloatDivider of IComponentLambda<WFloatDivider, WFloat, WFloat> {
     fn apply(self: @WFloatDivider, input: @WFloat) -> WFloat {
-        *self.factor / *input
+        *input / *self.factor
     }
 }
 

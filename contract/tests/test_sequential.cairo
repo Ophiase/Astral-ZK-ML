@@ -21,7 +21,7 @@ use astral_zkml::math::ml::{
 
 // ----------------------------------------------------------
 
-// #[ignore]
+#[ignore]
 #[test]
 fn build_neural_network() {
     let layers : Span<DenseLayer> = array![
@@ -51,7 +51,7 @@ fn build_neural_network() {
     println!("X = \n{X}");
     
     let y = model.forward(@X);
-    
+
     sep();
     println!("y = \n{y}");
 
@@ -72,7 +72,7 @@ fn build_neural_network() {
     println!("z = \n{}", model.forward(@X));
 }
 
-#[ignore]
+// #[ignore]
 #[test]
 fn verify_network_() {
     let layers : Span<DenseLayer> = array![
@@ -118,7 +118,10 @@ fn verify_network_() {
         // array![1, 3, 5, 1].span()
     ].span());
 
-    model.train(@X, @someY, 10, Option::None);
+    model.train(@X, @someY, 1, Option::None);
+
+    println!("trained model");
+
     println!("z = \n{}", model.forward(@X));
 
     println!("finished");

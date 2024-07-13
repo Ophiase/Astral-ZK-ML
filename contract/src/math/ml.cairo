@@ -211,6 +211,8 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
     fn backward(ref self: DenseLayer, dY: Matrix, learning_rate: WFloat) -> Matrix {
         let m = dY.dimX();
         let m_float = WFloatBasics::from_u64(m.into());
+        
+        println!("a");
         let dZ = dY
             * self
                 .cache_z
@@ -225,7 +227,7 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
         let dW = (self.cache_input.transpose()).dot(@dZ).divide_by(m_float);
         let dB = dZ.sum().divide_by(m_float);
         let dX = dZ.dot(@self.weights.transpose());
-
+        
         self.weights = self.weights - dW.scale(learning_rate);
         self.biaises = self.biaises - dB.scale(learning_rate);
 
@@ -333,7 +335,7 @@ pub impl SequentialBasics of ISequentialBasics {
             let loss = mse_loss(@output, y);
             let dY: Matrix = output - *y;
             self.backward(@dY);
-
+            
             average_loss = loss.mean()
         }
 
