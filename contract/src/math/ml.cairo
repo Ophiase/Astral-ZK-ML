@@ -212,7 +212,6 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
         let m = dY.dimX();
         let m_float = WFloatBasics::from_u64(m.into());
         
-        println!("a");
         let dZ = dY
             * self
                 .cache_z
@@ -375,7 +374,7 @@ pub impl LayerDisplay of Display<DenseLayer> {
 #[derive()]
 pub impl SequentialDisplay of Display<Sequential> {
     fn fmt(self: @Sequential, ref f: Formatter) -> Result<(), Error> {
-        let mut result : ByteArray = "Sequential full description"; 
+        let mut result : ByteArray = "Sequential full description\n"; 
         result.append(@SEP());
         result.append(@"\n");
 
