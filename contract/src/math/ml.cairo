@@ -95,7 +95,7 @@ pub enum SerializedLayerContent {
 // -------------------------------------------------
 
 #[derive(Copy, Drop)]
-trait ILayer<T> {
+pub trait ILayer<T> {
     fn build(ref self: T, input_shape: usize, seed: Option<u64>) -> ();
     fn forward(ref self: T, X: Matrix) -> Matrix;
     fn backward(ref self: T, dY: Matrix, learning_rate: WFloat) -> Matrix;
@@ -107,7 +107,7 @@ trait ILayer<T> {
 }
 
 #[derive(Copy, Drop)]
-struct DenseLayer {
+pub struct DenseLayer {
     built: bool,
     input_shape: usize,
     output_shape: usize,
@@ -120,10 +120,12 @@ struct DenseLayer {
 }
 
 #[derive(Copy, Drop)]
-struct SGD {
+pub struct SGD {
     learning_rate: WFloat,
     loss: LossFunctionType
 }
+
+pub const DEFAULT_SGD : SGD = SGD { learning_rate: DECIMAL_WFLOAT, loss: LossFunctionType::MSE };
 
 #[derive(Drop)]
 pub struct Sequential {
@@ -135,7 +137,7 @@ pub struct Sequential {
 // -------------------------------------------------
 
 #[generate_trait]
-impl DenseLayerBasics of IDenseLayerBasics {
+pub impl DenseLayerBasics of IDenseLayerBasics {
     fn init(
         input_shape: Option<usize>,
         output_shape: usize,
@@ -235,7 +237,18 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
 }
 
 #[generate_trait]
-impl SequentialBasics of ISequentialBasics {
+pub impl SequentialBasics of ISequentialBasics {
+    fn init(layers: Span<DenseLayer>, optimizer: SGD, seed: Option<u64>) -> Sequential {
+        let mut model = Sequential {
+            layers : layers,
+            optimizer : optimizer,
+            history : array![]
+        };
+        
+        model.build(seed);
+        model
+    }
+
     fn build(ref self: Sequential, seed: Option<u64>) -> () {
         let mut result = ArrayTrait::new();
 

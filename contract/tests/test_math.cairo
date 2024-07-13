@@ -10,12 +10,9 @@ use astral_zkml::math::vector::{Vector, VectorBasics};
 use astral_zkml::math::matrix::{Matrix, MatrixBasics};
 
 use astral_zkml::math::function::{exp};
+use astral_zkml::utils::{sep};
 
 // ----------------------------------------------------------
-
-fn sep() -> () {
-    println!("-----------------------------");
-}
 
 #[test]
 fn float_works() -> () {
