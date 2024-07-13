@@ -636,6 +636,20 @@ pub impl MatrixBasics of IMatrixBasics {
         result
     }
 
+    // Sum all the columns (vectors) 
+    fn sum_columns(self: @Matrix) -> Vector {
+        let dimX = self.dimX();
+        let mut result = ArrayTrait::new();
+        let mut i = 0;
+        loop {
+            if i == dimX { break(); }
+            result.append(self.get_ith_line(i).sum());            
+            i += 1;
+        };
+        Vector { content: result.span() }
+    }
+
+
     // values between -1 and 1
     fn random(shape: (usize, usize), seed: u64) -> Matrix {
         let (dimX, dimY) = shape;

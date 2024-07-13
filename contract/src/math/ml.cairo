@@ -34,6 +34,12 @@ pub enum LossFunctionType {
     CrossEntropy
 }
 
+fn mse_loss(predictions: @Matrix, targets: @Matrix) -> Vector {
+    let diff = *predictions - *targets;
+    (diff*diff).sum_columns()
+}
+
+
 #[derive(Copy, Drop, Hash, Serde, starknet::Store)]
 pub enum LayerType {
     Dense,
@@ -330,10 +336,5 @@ impl SequentialBasics of ISequentialBasics {
     //             print(f'Epoch {epoch+1}, Loss: {loss}')
 
     //     return self.loss_history
-
-    // def mse_loss(self, predictions: np.ndarray, targets: np.ndarray) -> float:
-    //     # print("predictions", predictions)
-    //     return np.mean(np.square(predictions - targets))
-
 
 }
