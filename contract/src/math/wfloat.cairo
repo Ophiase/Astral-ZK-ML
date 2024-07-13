@@ -1,3 +1,4 @@
+use core::traits::Into;
 use core::clone::Clone;
 use core::option::OptionTrait;
 use core::traits::TryInto;
@@ -194,6 +195,11 @@ pub impl WFloatBasics of IWFloatBasics {
         WFloat { value: unsigned_to_signed(@value) * ONE_WFLOAT_AS_I128 }
     }
 
+    #[inline]
+    fn from_u64(value: u64) -> WFloat {
+        let value : i128 = value.try_into().unwrap();
+        WFloat { value: value * ONE_WFLOAT_AS_I128 }
+    }
 
     fn from_pair(units: i128, decimals: u128, digits: usize) -> WFloat {
         let compensation = WFLOAT_POW - digits;

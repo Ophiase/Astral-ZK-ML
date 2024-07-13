@@ -5,6 +5,7 @@ pub mod algebra;
 pub mod signed;
 pub mod wfloat;
 pub mod function;
+pub mod random;
 
 // LEARN ALGEBRA
 pub mod component_lambda;

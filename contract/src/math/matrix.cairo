@@ -207,12 +207,12 @@ pub impl MatrixBasics of IMatrixBasics {
     }
 
     #[inline]
-    fn one(shape: (usize, usize)) -> Matrix {
+    fn ones(shape: (usize, usize)) -> Matrix {
         MatrixBasics::fill(shape, @ONE_WFLOAT)
     }
 
     #[inline]
-    fn zero(shape: (usize, usize)) -> Matrix {
+    fn zeros(shape: (usize, usize)) -> Matrix {
         MatrixBasics::fill(shape, @ZERO_WFLOAT)
     }
 

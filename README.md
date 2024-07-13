@@ -14,6 +14,8 @@ The models and the two smartcontracts utilizing them are written in the ZK-Proov
 		- Basic Algebra + Linear Algebra
 			- Principal types: Signed Integer, Float (WFloat), Vector, Matrix
 			- Numerous High level operations to manipulate those types.
+			- Uniform pseudo random generator (to initialize weights)
+				- TODO: add more distributions (normal, poisson, $\dots$)
 		- Multi Layer Perceptron (ie. regular Neural Network)
 			- eg: Star type identification
 	- Not Implemented Yet
