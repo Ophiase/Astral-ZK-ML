@@ -141,11 +141,11 @@ struct SGD {
     loss: LossFunctionType
 }
 
-#[derive(Copy, Drop)]
+#[derive(Drop)]
 pub struct Sequential {
     layers : Span<DenseLayer>,
     optimizer: SGD,
-    // history: Array<WFloat>
+    history: Array<WFloat>
 }
 
 // -------------------------------------------------
@@ -310,31 +310,39 @@ impl SequentialBasics of ISequentialBasics {
         self.layers = result.span();
     }
 
-    // def train(
-    //         self, X: np.ndarray, y: np.ndarray, epochs: int, 
-    //         batch_size: int, verbose: bool = False) -> List[float]:
+    fn train_epoch(
+        ref self : Sequential,
+        X : @Matrix, y : @Matrix,
+        batch_size : Option<usize>
+    ) -> () {
+        let mut average_loss = ZERO_WFLOAT;
+
+        // TODO: shuffle before epoch
         
-    //     self.loss_history = []
-    //     for epoch in range(epochs):
-    //         permutation = np.random.permutation(X.shape[0])
-    //         X_shuffled = X[permutation]
-    //         y_shuffled = y[permutation]
+        assert!(batch_size.is_none(), "Not implemented yet!");
+        {
+            let output = self.forward(X);
+            let loss = mse_loss(@output, y);
+            let dY : Matrix = output - *y;
+            self.backward(@dY);
 
-    //         for i in range(0, X.shape[0], batch_size):
-    //             X_batch = X_shuffled[i:i + batch_size]
-    //             y_batch = y_shuffled[i:i + batch_size]
-    //             output = self.forward(X_batch)
-    //             loss = self.mse_loss(output, y_batch)
-    //             dY = output - y_batch
-    //             self.backward(dY)
+            average_loss = loss.mean()
+        }
 
-    //         predictions = self.forward(X)
-    //         loss = self.mse_loss(predictions, y)
-    //         self.loss_history.append(loss)
+        self.history.append(average_loss);
+    }
 
-    //         if verbose and epoch % 10 == 0:
-    //             print(f'Epoch {epoch+1}, Loss: {loss}')
-
-    //     return self.loss_history
+    fn train(
+        ref self : Sequential,
+        X : @Matrix, y : @Matrix,
+        epochs : usize,  batch_size : Option<usize>
+    ) -> () {
+        let mut i = 0;
+        loop {
+            if i == epochs { break(); }
+            self.train_epoch(X, y, batch_size);
+            i += 1;
+        };
+    }
 
 }

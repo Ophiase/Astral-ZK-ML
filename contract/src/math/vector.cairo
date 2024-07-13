@@ -353,6 +353,10 @@ pub impl VectorBasics of IVectorBasics {
         result
     }
 
+    fn mean(self : @Vector) -> WFloat {
+        self.sum() / WFloatBasics::from_u64(self.len().into())
+    }
+
     #[inline]
     fn scale(self: @Vector, factor : WFloat) -> Vector {
         self.apply( WFloatMultiplier { factor: factor } )
