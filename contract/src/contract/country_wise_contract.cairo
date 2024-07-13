@@ -100,10 +100,62 @@ use starknet::ContractAddress;
     }
 
     // -------------------------------
+    // fn read_biais(self: @ContractState, which_layer : usize) -> Vector {
+    //     let mut i = 0;
+    //     loop {
+    //         if i == biais.len() { break(); }
+    //         self.model_content.write(
+    //             (which_layer, SerializedLayerIndex::Biais(i) ),
+    //             SerializedLayerContent::Weight(biais.at(i))
+    //         );
+    //         i += 1;
+    //     };
+    // }
+
+    // fn read_weights(self: ContractState, which_layer : usize) -> Matrix {
+    //     let (dimX, dimY) = weights.shape();
+    //     let mut i = 0;
+    //     loop {
+    //         if i == dimX { break(); }
+
+    //         let mut j = 0;
+    //         loop {
+    //             if j == dimY { break(); }
+
+    //             self.model_content.write(
+    //                 (which_layer, SerializedLayerIndex::Weights((i, j)) ),
+    //                 SerializedLayerContent::Weight( weights.at(i, j) )
+    //             );  
+    //             j += 1;
+    //         };
+    //         i += 1;
+    //     };
+    // }
+
+    // fn read_layer(ref self: ContractState, which_layer : usize) -> DenseLayer {
+    //     self.model_content.write(
+    //         ( which_layer, SerializedLayerIndex::InputSize ),
+    //         SerializedLayerContent::InputSize( layer.get_input_shape() )
+    //     );  
+        
+    //     self.model_content.write(
+    //         ( which_layer, SerializedLayerIndex::OutputSize ),
+    //         SerializedLayerContent::OutputSize( layer.get_output_shape() )
+    //     );  
+
+    //     save_biais(ref self, which_layer, layer.biaises);
+    //     save_weights(ref self, which_layer, layer.weights);
+        
+    //     self.model_content.write(
+    //         ( which_layer, SerializedLayerIndex::ActivationFunction ),
+    //         SerializedLayerContent::ActivationFunction( layer.activation_function )
+    //     );
+    // }
 
     // -------------------------------
 
-    // fn read_model() -> Sequential {
+    // fn read_model(self: @ContractState) -> Sequential {
+        
     // }
 
     // ------------------------------------------------------------------------------------
