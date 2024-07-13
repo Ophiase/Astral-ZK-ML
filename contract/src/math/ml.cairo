@@ -286,9 +286,23 @@ impl SequentialBasics of ISequentialBasics {
         output
     }
 
-    // def backward(self, dY: np.ndarray) -> None:
-    //     for layer in reversed(self.layers):
-    //         dY = layer.backward(dY, self.optimizer.learning_rate)
+    fn backward(ref self : Sequential, dY : @Matrix) -> () {
+        let mut result = ArrayTrait::new();
+        let mut dY : Matrix = *dY;
+
+        let mut i = 1;
+        loop {
+            if i == self.layers.len() { break(); }
+
+            let mut value : DenseLayer = *self.layers.at(i);
+            dY = value.backward(dY, self.optimizer.learning_rate);
+            result.append(value);
+
+            i += 1;
+        };
+
+        self.layers = result.span();
+    }
 
     // def train(
     //         self, X: np.ndarray, y: np.ndarray, epochs: int, 
