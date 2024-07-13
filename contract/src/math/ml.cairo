@@ -126,8 +126,8 @@ pub struct DenseLayer {
 
 #[derive(Copy, Drop)]
 pub struct SGD {
-    learning_rate: WFloat,
-    loss: LossFunctionType
+    pub learning_rate: WFloat,
+    pub loss: LossFunctionType
 }
 
 pub const DEFAULT_SGD : SGD = SGD { learning_rate: DECIMAL_WFLOAT, loss: LossFunctionType::MSE };

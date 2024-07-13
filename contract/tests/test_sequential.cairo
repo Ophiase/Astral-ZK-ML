@@ -15,7 +15,8 @@ use astral_zkml::utils::{sep};
 
 use astral_zkml::math::ml::{
     Sequential, SequentialBasics,
-    ActivationFunction, DEFAULT_SGD,
+    ActivationFunction, 
+    DEFAULT_SGD, SGD, LossFunctionType,
     DenseLayer, DenseLayerBasics
 };
 
@@ -85,14 +86,21 @@ fn verify_network_() {
         DenseLayerBasics::add( 
             output_shape: 10,
             activation_function: ActivationFunction::ReLU,
-        ),        DenseLayerBasics::add( 
+        ),
+        DenseLayerBasics::add( 
+            output_shape: 10,
+            activation_function: ActivationFunction::ReLU,
+        ),
+        DenseLayerBasics::add( 
             output_shape: 3,
             activation_function: ActivationFunction::ReLU,
         ),
     ].span();
     
     let mut model = SequentialBasics::init(
-        layers, DEFAULT_SGD, Option::None
+        layers, 
+        SGD { learning_rate: ONE_WFLOAT, loss: LossFunctionType::MSE }, 
+        Option::None
     );
 
     println!("{model}");
