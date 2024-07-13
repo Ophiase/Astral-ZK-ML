@@ -543,7 +543,6 @@ pub impl MatrixBasics of IMatrixBasics {
                     break ();
                 }
 
-                println!("at: {i} {j}");
                 let b = (rhs_transpose.content.at(j));
                 sub_result.append(a.dot(b));
 

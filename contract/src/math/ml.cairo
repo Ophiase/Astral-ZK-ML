@@ -193,18 +193,14 @@ impl DenseLayerImpl of ILayer<DenseLayer> {
     fn forward(ref self: DenseLayer, X: Matrix) -> Matrix {
         self.cache_input = X;
         self.cache_z = (X.dot(@self.weights)).row_wise_addition(@self.biaises);
-        self
-            .cache_output = self
-            .cache_z
-            .apply(
+        self.cache_output = self.cache_z.apply(
                 match self.activationFunction {
                     ActivationFunction::ReLU => ReLU {},
                     // TODO: apply softmax row-wise 
                     ActivationFunction::SoftMax => panic!("Not Implemented")
                 }
             );
-
-        X
+        self.cache_output
     }
 
     fn backward(ref self: DenseLayer, dY: Matrix, learning_rate: WFloat) -> Matrix {
@@ -257,6 +253,11 @@ pub impl SequentialBasics of ISequentialBasics {
             Option::None => default_seed
         };
 
+        let mut first_layer : DenseLayer = *self.layers.at(0);
+        first_layer.build(first_layer.input_shape, Option::Some(seed));
+        seed = lcg_rand(seed);
+        result.append(first_layer);
+
         let mut input_shape = self.layers[0].get_input_shape();
         let mut i = 1;
         loop {
@@ -279,7 +280,7 @@ pub impl SequentialBasics of ISequentialBasics {
         let mut result = ArrayTrait::new();
         let mut output: Matrix = *X;
 
-        let mut i = 1;
+        let mut i = 0;
         loop {
             if i == self.layers.len() {
                 break ();
