@@ -18,6 +18,9 @@ use super::function::{
 use super::component_lambda::{
     Exponential, ReLU, ReLUDerivative
 };
+use super::random::{
+    default_seed, lcg_rand, normalize_lgn_rand, normalize_lgn_rand_11
+};
 
 // MACHINE LEARNING
 // -------------------------------------------------
@@ -97,7 +100,7 @@ pub enum SerializedLayerContent {
 
 #[derive(Copy, Drop)]
 trait ILayer<T> {
-    fn build(ref self : T, input_shape: usize) -> ();
+    fn build(ref self : T, input_shape: usize, seed: Option<u64>) -> ();
     fn forward(ref self : T, X: Matrix) -> Matrix;
     fn backward(ref self : T, dY: Matrix, learning_rate: WFloat) -> Matrix;
     fn num_params(ref self : @T) -> usize;
@@ -133,7 +136,8 @@ impl DenseLayerBasics of IDenseLayerBasics {
     fn init(
         input_shape: Option<usize>, 
         output_shape: usize,
-        activation_function : ActivationFunction
+        activation_function : ActivationFunction,
+        seed: Option<u64>
     ) -> DenseLayer {
         let mut layer = DenseLayer {
             built : false,
@@ -146,8 +150,11 @@ impl DenseLayerBasics of IDenseLayerBasics {
             biaises: VectorBasics::zeros(0),
         };
 
-        if input_shape.is_none() {
-            layer.build(input_shape.unwrap())
+        if !input_shape.is_none() {
+            layer.input_shape = input_shape.unwrap();
+            if !seed.is_none() {
+                layer.build(input_shape.unwrap(), seed)
+            }
         }
 
         layer
@@ -156,7 +163,7 @@ impl DenseLayerBasics of IDenseLayerBasics {
 
 impl DenseLayerImpl of ILayer<DenseLayer> {
     // TODO
-    fn build(ref self : DenseLayer, input_shape: usize) -> () {
+    fn build(ref self : DenseLayer, input_shape: usize, seed : Option<u64>) -> () {
 
     }
 
