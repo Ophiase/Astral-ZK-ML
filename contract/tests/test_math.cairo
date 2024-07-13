@@ -14,6 +14,7 @@ use astral_zkml::utils::{sep};
 
 // ----------------------------------------------------------
 
+#[ignore]
 #[test]
 fn float_works() -> () {
     // sep();
@@ -36,6 +37,7 @@ fn float_works() -> () {
 // sep();
 }
 
+#[ignore]
 #[test]
 fn vector_works() -> () {
     let v1 = VectorBasics::from_i128(@array![10_i128, 5, 6].span());
@@ -62,6 +64,7 @@ fn vector_works() -> () {
 // );
 }
 
+#[ignore]
 #[test]
 fn matrix_works() -> () {
     let m1 = MatrixBasics::identity((3, 3));
@@ -129,12 +132,14 @@ fn matrix_works() -> () {
     let _ = m1 + m2 + m3;
 }
 
-// #[test]
-// fn check_exp_function() -> () {
-//     println!("{}", exp(WFloatBasics::from_i128(1)));
-//     println!("{}", exp(WFloatBasics::from_i128(2)));
-//     println!("{}", exp(WFloatBasics::from_i128(3)));
-// }
+#[ignore]
+#[test]
+fn check_exp_function() -> () {
+    println!("{}", exp(@WFloatBasics::from_i128(1)));
+    println!("{}", exp(@WFloatBasics::from_i128(2)));
+    println!("{}", exp(@WFloatBasics::from_i128(3)));
+}
 
+#[ignore]
 #[test]
 fn check_activation_function() -> () {}

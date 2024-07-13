@@ -14,6 +14,11 @@ use super::function::{exp};
 use super::component_lambda::{Exponential, ReLU, ReLUDerivative};
 use super::random::{default_seed, lcg_rand, normalize_lgn_rand, normalize_lgn_rand_11};
 
+use core::fmt::{Display, Formatter, Error};
+use super::super::utils::{
+    SEP
+};
+
 // MACHINE LEARNING
 // -------------------------------------------------
 
@@ -346,5 +351,42 @@ pub impl SequentialBasics of ISequentialBasics {
             self.train_epoch(X, y, batch_size);
             i += 1;
         };
+    }
+}
+
+// -------------------------------------------------
+
+#[derive()]
+pub impl LayerDisplay of Display<DenseLayer> {
+    fn fmt(self: @DenseLayer, ref f: Formatter) -> Result<(), Error> {
+        let mut result : ByteArray = "Layer\n"; 
+        result.append(@SEP());
+        result.append(@"\n");
+
+        result.append(@format!("{}\n",self.weights));
+        result.append(@format!("{}", self.biaises));
+
+        write!(f, "{}", result)
+    }
+}
+
+#[derive()]
+pub impl SequentialDisplay of Display<Sequential> {
+    fn fmt(self: @Sequential, ref f: Formatter) -> Result<(), Error> {
+        let mut result : ByteArray = "Sequential full description"; 
+        result.append(@SEP());
+        result.append(@"\n");
+
+        let mut i = 0;
+        loop {
+            if i == (*self.layers).len() { break(); }
+            
+            let value = (*self.layers).at(i);
+            result.append(@format!("{}\n", value));
+
+            i += 1;
+        };
+
+        write!(f, "{}", result)
     }
 }

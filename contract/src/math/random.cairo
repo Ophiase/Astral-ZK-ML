@@ -15,11 +15,11 @@ pub fn lcg_rand(seed: u64) -> u64 {
 }
 
 pub fn normalize_lgn_rand(lgc_rand_result: u64) -> WFloat {
-    let lgc_float = WFloatBasics::from_u64(lgc_rand_result);
+    let lgc_float = WFloatBasics::from_u64(lgc_rand_result % M);
     lgc_float / M_FLOAT
 }
 
 pub fn normalize_lgn_rand_11(lgc_rand_result: u64) -> WFloat {
-    let lgc_float = WFloatBasics::from_u64(lgc_rand_result);
+    let lgc_float = WFloatBasics::from_u64(lgc_rand_result % M);
     (TWO_WFLOAT * lgc_float / M_FLOAT) - ONE_WFLOAT
 }
