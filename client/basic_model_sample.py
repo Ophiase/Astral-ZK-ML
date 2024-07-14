@@ -141,3 +141,18 @@ class Sequential:
 class SGD:
     def __init__(self, learning_rate : float) -> None:
         self.learning_rate = learning_rate
+
+# ----------------------------------------------------------------------------------------------------------------
+
+def build_model(train_X, train_Y):
+    layers = [
+        DenseLayer(input_shape=train_X.shape[1], output_shape=5, activation="ReLU"), 
+        DenseLayer(output_shape=5, activation="ReLU"), 
+        DenseLayer(output_shape=train_Y.shape[1], activation="ReLU"), 
+    ]
+
+    model = Sequential(layers, SGD(learning_rate=0.01))
+    model.build()
+    model.train(train_X, train_Y, epochs=30, batch_size=1000, verbose=True)
+    
+    return model

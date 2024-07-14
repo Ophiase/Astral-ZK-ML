@@ -35,7 +35,7 @@ Declaration/Deployment explained in [contract/README.md](oracle_contract/README.
         "<INSERT>"
     ],
     "bot_address" : [ "<INSERT>" ],
-    "bot_key": [ "<INSERT>" ]
+    "bot_private_key": [ "<INSERT>" ]
 }
 ```
 

@@ -2,6 +2,9 @@ import eel
 import time
 from threading import Thread
 from common import globalState
+from simulation_data import sample
+# from basic_model_sample import
+from contract import invoke_predict
 
 # ----------------------------------------------------------------------
 
@@ -10,10 +13,27 @@ Commands :
     - help / clear / exit
     
     - fetch
+    - predict
+        - requires to fetch before
 
     - auto_fetch on/off (default: off)
     - auto_commit on/off (default: off, ie. fetch => commit)
     - auto_resume on/off (default: off, ie. commit => resume)
+
+    - get_filtered_epoch
+    - get_propositions
+
+    - evaluate_stored_prediction
+
+    - get_validator_list
+    - get_countries_list
+    - get_countrie_scores
+    
+    # Validator replacement
+    - update_proposition
+    - vote_for_a_proposition
+    - get_replacement_propositions
+    - get_a_specific_proposition
 
     - contract_declaration_address
     - contract_address
@@ -27,8 +47,6 @@ For <validator> <bot> arguments, you can either specify the index in the contrac
 
 '''
 
-#     - set_component <component> (max : contract_dimension / local_prediction_dimension)
-
 # ----------------------------------------------------------------------
 
 def init_server():
@@ -41,15 +59,16 @@ def init_server():
 
 # ----------------------------------------------------------------------
 
+# TODO:
 def propositions_as_str(only_not_none = False) -> str:
-    propositions = call_replacement_propositions()
+    propositions = None #call_replacement_propositions()
     text = ""
     for index, proposition in enumerate(propositions) :
         if proposition is None :
             if not only_not_none:
-                text += f"- Admin {index} : None\n"
+                text += f"- Validator {index} : None\n"
         else :
-            text += f"- Admin {index} : \n"
+            text += f"- Validator {index} : \n"
             text += f" - {proposition[0]} -> {to_hex(proposition[1])} \n"
     return text
 
@@ -84,7 +103,19 @@ def query(text : str):
             
         case "fetch":
             eel.writeToConsole("Processing ..")
-            # simulation_fetch(gen_classifier())
+            X, Y = sample()
+            globalState.current_sample = X
+            model_Y = None
+            visual = f"X = \n{X}\n Expected Y = \n{Y}\nExpected model\nY = \n{model_Y}"
+            eel.setSimulationConsole(
+                visual
+            )
+
+        case "predict":
+            eel.writeToConsole("Processing ..")
+            invoke_predict(globalState.current_sample)
+
+
         case "auto_fetch":
             if unexpected_argument(2, splitted) : return
             globalState.auto_fetch = on_off_to_bool(splitted[1])

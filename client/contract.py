@@ -22,6 +22,8 @@ import asyncio
 
 import numpy as np
 
+from basic_conversions import wfloat, wfloat_to_float, to_hex, from_hex
+
 # ----------------------------------------------------------------------
 
 ACCOUNTS_PATH = os.path.join("data", "sepolia.json")
@@ -31,7 +33,7 @@ RESOURCE_BOUND_UPDATE_PREDICTION = RESSOURCE_BOUND_COMMON
 RESOURCE_BOUND_UPDATE_PROPOSITION = RESSOURCE_BOUND_COMMON
 RESOURCE_BOUND_VOTE_FOR_A_PREDICTION = RESSOURCE_BOUND_COMMON
 
-def retrieve_account_data():
+def retrieve_account_data() -> None:
     with open(ACCOUNTS_PATH, 'r') as file:
         data = json.load(file)
 
@@ -40,8 +42,8 @@ def retrieve_account_data():
     
     validators_addresses = data["validators_addresses"]
     validators_private_keys = data["validators_private_keys"]
-    bot_addresses = data["bot_addresses"]
-    bot_private_keys = data["bot_private_keys"]
+    bot_address = data["bot_address"]
+    bot_private_key = data["bot_private_key"]
 
     for address, key in zip(validators_addresses, validators_private_keys) :
         globalState.validator_accounts[int(address, 16)] = Account(
@@ -49,52 +51,51 @@ def retrieve_account_data():
                 address=address,
                 key_pair=KeyPair.from_private_key(key),
                 chain=StarknetChainId.SEPOLIA)
-    for address, key in zip (bots_addresses, bots_private_keys) :
-        globalState.bot_accounts[int(address, 16)] = Account(
+    for address, key in zip (bot_address, bot_private_key) :
+        globalState.bot_account = Account(
                 client=globalState.client,
                 address=address,
                 key_pair=KeyPair.from_private_key(key),
                 chain=StarknetChainId.SEPOLIA)
-
-    globalState.default_contract = asyncio.run(
-        Contract.from_address(
-                provider=globalState.validator_accounts[int(validators_addresses[0], 16)], 
-                address=globalState.DEPLOYED_ADDRESS
-        ))
+        
+    # globalState.default_contract = asyncio.run(
+    #     Contract.from_address(
+    #             provider=globalState.validator_accounts[int(validators_addresses[0], 16)], 
+    #             address=globalState.DEPLOYED_ADDRESS
+    #     ))
 
 
 # ----------------------------------------------------------------------
 
-def address_to_bot_index(address : int) -> int:
-    '''
-    Converts an address to the corresponding index
-    '''
-    bot_list = call_bot_list()
-    for index, bot in enumerate(bot_list) :
-        if bot == address : return index
-    raise IndexError()
+# def address_to_bot_index(address : int) -> int:
+#     '''
+#     Converts an address to the corresponding index
+#     '''
+#     bot_list = call_bot_list()
+#     for index, bot in enumerate(bot_list) :
+#         if bot == address : return index
+#     raise IndexError()
 
-def bot_index_to_address(index : int) -> int:
-    '''
-    Converts an index to the corresponding address
-    '''
-    return int(call_bot_list()[index], 16)
+# def bot_index_to_address(index : int) -> int:
+#     '''
+#     Converts an index to the corresponding address
+#     '''
+#     return int(call_bot_list()[index], 16)
 
-def address_to_validator_index(address : int) -> int:
-    '''
-    Converts an address to the corresponding index
-    '''
-    validator_list = call_validator_list()
-    for index, validator in enumerate(validator_list) :
-        if validator == address : return index
-    raise IndexError()
+# def address_to_validator_index(address : int) -> int:
+#     '''
+#     Converts an address to the corresponding index
+#     '''
+#     validator_list = call_validator_list()
+#     for index, validator in enumerate(validator_list) :
+#         if validator == address : return index
+#     raise IndexError()
 
-def validator_index_to_address(index : int) -> int:
-    '''
-    Converts an index to the corresponding address
-    '''
-    return int(call_validator_list()[index], 16)
-
+# def validator_index_to_address(index : int) -> int:
+#     '''
+#     Converts an index to the corresponding address
+#     '''
+#     return int(call_validator_list()[index], 16)
 
 
 # ----------------------------------------------------------------------
@@ -107,11 +108,42 @@ def call_generic(function_name : str) :
         contract.functions[function_name].call()
     )[0]
 
-def call_something() -> np.array :
-    value = call_generic('something')
-    globalState.remote_something = [fwsad_to_float(x) for x in value]
-    return globalState.something
+# def call_something() -> np.array :
+#     value = call_generic('something')
+#     globalState.remote_something = [fwsad_to_float(x) for x in value]
+#     return globalState.something
 
 # ----------------------------------------------------------------------
 # INVOKE
 # ----------------------------------------------------------------------
+
+# ADD PREDICTION INVOKE
+
+def invoke_predict(prediction: np.array, debug=False) :
+    account = globalState.bot_accounts
+
+    contract = asyncio.run(
+        Contract.from_address(
+                provider=account, 
+                address=globalState.DEPLOYED_ADDRESS
+    ))
+
+    inputs_as_felt = [
+       [ wfloat(x) for x in line ] for line in prediction
+    ]
+
+
+    eel.writeToConsole("Try predict ..")
+
+    # fn predict(ref self: TContractState, inputs: Matrix, for_storage: bool) -> Matrix;
+    result = asyncio.run(
+        contract.functions["predict"].invoke_v3(
+            inputs=inputs_as_felt, for_storage=True, 
+            l1_resource_bounds=RESOURCE_BOUND_UPDATE_PREDICTION
+        )
+    )
+
+    eel.writeToConsole("Succeed")
+    eel.setSepoliaConsole(
+        f"Onchain result:\n{result}"
+    )

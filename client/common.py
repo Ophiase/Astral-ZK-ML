@@ -1,7 +1,7 @@
 import json
 import os
 from starknet_py.net.full_node_client import FullNodeClient
-
+import numpy as np
 
 # ----------------------------------------------------------------------
 # GLOBAL VARIABLES
@@ -22,9 +22,15 @@ class GlobalState:
         self.addresses = None
         self.private_keys = None
 
-        self.admin_accounts = None
-        self.oracle_accounts = None
+        self.validator_accounts = None
+        self.bot_accounts = None
         self.default_contract = None
 
+        self.train_X = None
+        self.train_Y = None
+        self.test_X = None
+        self.test_Y = None
+
+        self.current_sample = np.array([])
 
 globalState = GlobalState()

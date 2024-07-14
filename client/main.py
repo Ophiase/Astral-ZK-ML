@@ -9,6 +9,7 @@ import argparse
 from threading import Thread
 from common import globalState
 from contract import retrieve_account_data
+from simulation_data import import_data
 
 def main():
     parser = argparse.ArgumentParser(description="Oracle Scheduler")
@@ -24,7 +25,9 @@ def main():
         print("[Warning] : Offline mode - Did not find data/sepolia.json !")
 
     # if not args.disable_sepolia :
-        # retrieve_account_data()
+
+    retrieve_account_data()
+    import_data()
 
     init_server()
 

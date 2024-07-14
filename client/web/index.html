@@ -21,16 +21,15 @@
     </div>
 
     <div class="container">
+
         <div class="bot-container">
-            <h2>Simulation</h2>
-            <button class="btn" onclick="query('fetch')">Fetch Data</button>
-            <button class="btn" onclick="query('commit')">Commit Predictions</button>
-            <h3>Simulation data :</h3>
-            <div id="simulation-output" class="console-mid">
+            <button class="btn" onclick="query('fetch')">Fetch inputs from dataset</button>
+            <button class="btn" onclick="query('predict')">Ask for prediction</button>
+            <div id="simulation-output" class="console">
                 Nothing, please fetch.
             </div>
         </div>
-        
+
         <div class="bot-container">
             <h2>Console</h2>
             <div id="console-output" class="console">
@@ -43,22 +42,16 @@
             <h2>On-Chain State (Sepolia)</h2>
             <div class="content-wrapper">
                 <div class="left-content">
-                    <h3>Something</h3>
-                    <canvas id="progress-bar-2" width="400" height="90"></canvas>
-                    <div id="progress-text-2"></div>
-                    <h3>Something</h3>
-                    <canvas id="progress-bar-1" width="400" height="90"></canvas>
-                    <div id="progress-text-1"></div>
-                    
+                    <p>Todo</p>
                 </div>
                 <div class="right-content">
-                    <button class="btn" onclick="query('resume')">Resume</button>
+                    <!-- <button class="btn" onclick="query('resume')">Resume</button> -->
                     <button class="btn" onclick="query('validators_list')">Validators</button>
                 </div>
             </div>
 
             <div id="sepolia_infos" class="console-short">
-                Nothing, please query a Sepolia Resume.
+                Nothing, please ask a prediction.
             </div>
         </div>
     </div>
