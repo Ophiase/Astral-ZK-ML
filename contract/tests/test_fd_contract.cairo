@@ -8,7 +8,8 @@ use astral_zkml::math::wfloat::{
 use astral_zkml::math::vector::{Vector, VectorBasics};
 use astral_zkml::math::matrix::{Matrix, MatrixBasics};
 use astral_zkml::contract::fully_decentralized_contract::{
-    FullyDecentralizedContract, IFullyDecentralizedContractDispatcher, IFullyDecentralizedContractDispatcherTrait
+    FullyDecentralizedContract, IFullyDecentralizedContractDispatcher,
+    IFullyDecentralizedContractDispatcherTrait
 };
 
 use starknet::syscalls::deploy_syscall;
@@ -21,9 +22,7 @@ fn util_felt_addr(addr_felt: felt252) -> ContractAddress {
 }
 
 fn deploy_contract() -> IFullyDecentralizedContractDispatcher {
-    let calldata: Span<felt252> = array![
-    ]
-        .span();
+    let calldata: Span<felt252> = array![].span();
 
     let (address0, _) = deploy_syscall(
         FullyDecentralizedContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata, false
@@ -58,7 +57,6 @@ fn check_contract() -> () {
     let result = dispatcher.predict(X, false);
     println!("result : \n{result}");
     println!("wanted : \n{Y}");
-
 // -------------------------------------------------------------------
 
 }
