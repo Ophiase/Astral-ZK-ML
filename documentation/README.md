@@ -52,7 +52,7 @@ added to the validated array.
 
 When the validated array has enough data, it launch the training process.
 
-- <p align="center"><img src="../resources/schema_country_wise_decentralized.png" width=8700></p>
+- <p align="center"><img src="../resources/schema_country_wise_decentralized.png" width=870></p>
 		
 ##### Miscellaneous
 
@@ -69,9 +69,36 @@ Implemented on Starknet.
 
 ## Tools Deployed
 
+Tools availible in `contract/src/math` :
+```rust
+// GENERAL INTERFACE
+pub mod algebra;
+
+// BASIC MATH
+pub mod signed;
+pub mod wfloat;
+pub mod function;
+pub mod random;
+
+// LINEAR ALGEBRA
+pub mod component_lambda;
+pub mod vector;
+pub mod matrix;
+
+// DATA SCIENCE MODULES
+pub mod statistics;
+pub mod ml;
+```
+
 ### Linear Algebra
 
 ### Machine Learning
+
+- Personal notes
+    - I should replace MSE with CategoricalCrossEntropy if I have time for most examples.
+    - I lost half of the Hackathon thinking I introduced a bug, the two used datasets are just hard to exploit
+        - Proof: I get the same Loss from Keras and my model from scratch in ``/contract/draft/on_data_2.ipynb``
+        - The Sequential in Cairo is a direct translation from the pythonic version in ``/contracts/draft/basic_model_sample.py``
 
 #### MLP
 
@@ -79,7 +106,9 @@ Implemented on Starknet.
 
 #### GAT
 
+- Personal notes
+    - I will not have the time to do this one, but I keep the idea for future projects at University.
 
 ## Miscellaneous
 
-TODO
+🌠 It's 5:10 AM on Sunday, July 14th, at the station for ETHGlobal Brussels, and I'm starting to hear the whispers from Cairo ghosts... 

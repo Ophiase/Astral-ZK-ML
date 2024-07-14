@@ -7,7 +7,7 @@ pub mod wfloat;
 pub mod function;
 pub mod random;
 
-// LEARN ALGEBRA
+// LINEAR ALGEBRA
 pub mod component_lambda;
 pub mod vector;
 pub mod matrix;
