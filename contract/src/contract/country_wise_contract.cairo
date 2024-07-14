@@ -5,15 +5,16 @@ use super::super::math::matrix::{Matrix};
 pub trait ICountryWiseContract<TContractState> {
     // USER SIDE
     // ---------------
+    
     fn predict(ref self: TContractState, inputs: Matrix, for_storage: bool) -> Matrix;
 
     // VALIDATOR SIDE
     // ---------------
 
-    // fn evaluate_stored_prediction()
-
     // fn get_filtered_epoch
     // fn get_propositions
+
+    fn evaluate_stored_prediction(ref self: TContractState, which : usize, evaluation : Option<Span<felt252>>);
 
     // MANAGEMENT
     // ---------------
@@ -22,17 +23,22 @@ pub trait ICountryWiseContract<TContractState> {
     // fn get_countries_list(self: @TContractState) -> Array<felt252>;
     
     // fn update_proposition(ref self: TContractState, proposition : Option<(usize, ContractAddress)>);
-    // fn vote_for_a_proposition(ref self: TContractState, which_admin : usize, support_his_proposition : bool);
+    // fn vote_for_a_proposition(ref self: TContractState, which_validator : usize, support_his_proposition : bool);
     
     // fn get_replacement_propositions(self: @TContractState) -> Array<Option<(usize, ContractAddress)>>;
     // fn get_a_specific_proposition(self: @TContractState, which_admin : usize) -> Option<(usize, ContractAddress)>;
 
     // MISC
     // ---------------
+
+    fn get_n_proposed (self : @TContractState) -> usize;
+    fn get_max_propositions (self : @TContractState) -> usize;
+    fn get_min_filtered (self : @TContractState) -> usize;
 }
 
 #[starknet::contract]
 pub mod CountryWiseContract {
+    use starknet::get_caller_address;
     use core::array::ArrayTrait;
     use astral_zkml::math::ml::ILayer;
     use core::array::SpanTrait;
@@ -49,6 +55,12 @@ pub mod CountryWiseContract {
 
     // ------------------------------------------------------------------------------------
 
+    #[derive(Drop, Serde, starknet::Store, Hash)]
+    pub struct VoteCoordinate {
+        vote_emitter : usize,
+        vote_receiver: usize
+    }
+
     #[derive(Drop, Serde, starknet::Store, Copy, Hash)]
     enum PredictionIndex {
         Author,
@@ -61,19 +73,47 @@ pub mod CountryWiseContract {
         Data: WFloat
     }
 
+    #[derive(Drop, Serde, starknet::Store, Copy, Hash)]
+    enum IndexVote {
+        Absurd: usize,
+        WantedResult: (usize, usize)
+    }
+
+    #[derive(Drop, Serde, starknet::Store, Copy, Hash)]
+    enum VoteData {
+        Absurd: bool,
+        Data: WFloat
+    }
+
+    // ------------------------------------------------------------------------------------
+
+
     #[storage]
     struct Storage {
+        // MODEL
         model_size: usize,
         model_optimizer: SGD,
         model_content: LegacyMap<(usize, SerializedLayerIndex), SerializedLayerContent>,
 
+        // TRAINING MANAGEMENT
         max_propositions: usize,
         n_proposed: usize,
         propositions: LegacyMap<(usize, PredictionIndex), PredictionData>,
+        training_vote_matrix: LegacyMap<IndexVote, VoteData>,
 
         min_filtered: usize,
         n_filtered: usize,
         filtered: LegacyMap<(usize, PredictionIndex), PredictionData>,
+
+        // ADMINISTRATION
+        n_countries: usize,
+        countries_id: LegacyMap<usize, felt252>,
+        countries_scores: LegacyMap<usize, WFloat>,
+
+        n_validators: usize,
+        validators: LegacyMap<usize, (ContractAddress, usize)>,
+        replacement_vote_matrix : LegacyMap<VoteCoordinate, bool>,
+        replacement_propositions : LegacyMap<usize, Option<(usize, ContractAddress)>>,
     }
 
     // DIRTY PART (waiting for starknet-2.7.2 to store the network properly)
@@ -256,9 +296,40 @@ pub mod CountryWiseContract {
 
     // ------------------------------------------------------------------------------------
 
+    fn find_validator_index (self: @ContractState, validator : @ContractAddress) -> Option<usize> {
+        let mut i = 0;
+        loop {
+            if i == self.n_validators.read() {
+                break(Option::None);
+            }
+
+            let (address, _which_country) = self.validators.read(i);
+
+            if address == *validator {
+                break(Option::Some(i));
+            }
+            
+            i += 1;
+        }
+    }
+
+    fn is_validator(self: @ContractState, validator : @ContractAddress) -> bool {
+        match find_validator_index(self, validator) {
+            Option::None => false,
+            Option::Some(_x) => true
+        }
+    }
+
     #[constructor]
     fn constructor(
         ref self: ContractState,
+        // max_propositions : usize,
+        // n_proposed : usize,
+        // min_filtered : usize,
+        // n_countries : usize,
+        // countries: Span<felt252>,
+        // initial_validators: Span<ContractAddress>
+
         raw_model: Span<(Span<Span<felt252>>, Span<felt252>, ActivationFunction)>
     ) {
         let model = SequentialBasics::init_from_felt252(raw_model, DEFAULT_SGD);
@@ -266,12 +337,33 @@ pub mod CountryWiseContract {
         save_model(ref self, model);
     }
 
+
     #[abi(embed_v0)]
     impl ContractImpl of super::ICountryWiseContract<ContractState> {
         fn predict(ref self: ContractState, inputs: Matrix, for_storage: bool) -> Matrix {
-            assert!(!for_storage, "not implemented yet");
+            if for_storage {
+                match find_validator_index(@self, @get_caller_address()) {
+                    Option::Some(_idx) => panic!("not implemented yet"),
+                    Option::None => panic!("not a validator")
+                };
+            }
+            
             let mut model = read_model(@self);
             model.forward(@inputs)
+        }
+
+        fn evaluate_stored_prediction(ref self: ContractState, which : usize, evaluation : Option<Span<felt252>>) {
+            panic!("not_implemented yet");
+        }
+
+        fn get_n_proposed (self : @ContractState) -> usize {
+            self.n_proposed.read()
+        }
+        fn get_max_propositions (self : @ContractState) -> usize {
+            self.max_propositions.read()
+        }
+        fn get_min_filtered (self : @ContractState) -> usize {
+            self.min_filtered.read()
         }
     }
 }
