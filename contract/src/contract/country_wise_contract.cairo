@@ -320,15 +320,16 @@ pub mod CountryWiseContract {
     #[constructor]
     fn constructor(
         ref self: ContractState,
-        // max_propositions: usize,
-        // min_filtered: usize,
-        // countries: Span<felt252>,
-        // initial_validators: Span<ContractAddress>,
-        // initial_validators_countries: Span<usize>,
-        // raw_model: Span<(Span<Span<felt252>>, Span<felt252>, ActivationFunction)>
+        max_propositions: usize,
+        min_filtered: usize,
+        countries: Span<felt252>,
+        initial_validators: Span<ContractAddress>,
+        initial_validators_countries: Span<usize>,
+
+        raw_model: Span<(Span<Span<felt252>>, Span<felt252>, ActivationFunction)>
     ) {
-        // let model = SequentialBasics::init_from_felt252(raw_model, DEFAULT_SGD);
-        // save_model(ref self, model);
+        let model = SequentialBasics::init_from_felt252(raw_model, DEFAULT_SGD);
+        save_model(ref self, model);
         
         // TODO:
         // n_proposed : usize,
