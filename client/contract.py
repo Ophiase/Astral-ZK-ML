@@ -31,53 +31,26 @@ RESOURCE_BOUND_UPDATE_PREDICTION = RESSOURCE_BOUND_COMMON
 RESOURCE_BOUND_UPDATE_PROPOSITION = RESSOURCE_BOUND_COMMON
 RESOURCE_BOUND_VOTE_FOR_A_PREDICTION = RESSOURCE_BOUND_COMMON
 
-
-UPPER_BOUND_FELT252 = 3618502788666131213697322783095070105623107215331596699973092056135872020481
-UPPER_BOUND__I128 = (2**127) - 1 # included
-
-# ----------------------------------------------------------------------
-
-# fwsad for wsad as felt252
-def fwsad_to_float(x) :
-    return float(
-        (x - UPPER_BOUND_FELT252) if x > UPPER_BOUND__I128 \
-        else x
-    ) * 1e-6
-
-# fwsad for wsad as felt252
-def float_to_fwsad(x) :
-    as_wsad = int(x*1e6)
-    return (
-        as_wsad + UPPER_BOUND_FELT252 if as_wsad < 0 \
-        else as_wsad
-    )
-
-def to_hex(x: int) -> str:
-    return f"0x{x:0x}"
-
-def from_hex(x : str) -> int:
-    return int(x, 16)
-
 def retrieve_account_data():
     with open(ACCOUNTS_PATH, 'r') as file:
         data = json.load(file)
 
-    globalState.admin_accounts = dict()
-    globalState.oracle_accounts = dict()
+    globalState.validator_accounts = dict()
+    globalState.bot_accounts = dict()
     
-    admins_addresses = data["admins_addresses"]
-    admins_private_keys = data["admins_private_keys"]
-    oracles_addresses = data["oracles_addresses"]
-    oracles_private_keys = data["oracles_private_keys"]
+    validators_addresses = data["validators_addresses"]
+    validators_private_keys = data["validators_private_keys"]
+    bot_addresses = data["bot_addresses"]
+    bot_private_keys = data["bot_private_keys"]
 
-    for address, key in zip(admins_addresses, admins_private_keys) :
-        globalState.admin_accounts[int(address, 16)] = Account(
+    for address, key in zip(validators_addresses, validators_private_keys) :
+        globalState.validator_accounts[int(address, 16)] = Account(
                 client=globalState.client,
                 address=address,
                 key_pair=KeyPair.from_private_key(key),
                 chain=StarknetChainId.SEPOLIA)
-    for address, key in zip (oracles_addresses, oracles_private_keys) :
-        globalState.oracle_accounts[int(address, 16)] = Account(
+    for address, key in zip (bots_addresses, bots_private_keys) :
+        globalState.bot_accounts[int(address, 16)] = Account(
                 client=globalState.client,
                 address=address,
                 key_pair=KeyPair.from_private_key(key),
@@ -85,42 +58,42 @@ def retrieve_account_data():
 
     globalState.default_contract = asyncio.run(
         Contract.from_address(
-                provider=globalState.admin_accounts[int(admins_addresses[0], 16)], 
+                provider=globalState.validator_accounts[int(validators_addresses[0], 16)], 
                 address=globalState.DEPLOYED_ADDRESS
         ))
 
 
 # ----------------------------------------------------------------------
 
-def address_to_oracle_index(address : int) -> int:
+def address_to_bot_index(address : int) -> int:
     '''
     Converts an address to the corresponding index
     '''
-    oracle_list = call_oracle_list()
-    for index, oracle in enumerate(oracle_list) :
-        if oracle == address : return index
+    bot_list = call_bot_list()
+    for index, bot in enumerate(bot_list) :
+        if bot == address : return index
     raise IndexError()
 
-def oracle_index_to_address(index : int) -> int:
+def bot_index_to_address(index : int) -> int:
     '''
     Converts an index to the corresponding address
     '''
-    return int(call_oracle_list()[index], 16)
+    return int(call_bot_list()[index], 16)
 
-def address_to_admin_index(address : int) -> int:
+def address_to_validator_index(address : int) -> int:
     '''
     Converts an address to the corresponding index
     '''
-    admin_list = call_admin_list()
-    for index, admin in enumerate(admin_list) :
-        if admin == address : return index
+    validator_list = call_validator_list()
+    for index, validator in enumerate(validator_list) :
+        if validator == address : return index
     raise IndexError()
 
-def admin_index_to_address(index : int) -> int:
+def validator_index_to_address(index : int) -> int:
     '''
     Converts an index to the corresponding address
     '''
-    return int(call_admin_list()[index], 16)
+    return int(call_validator_list()[index], 16)
 
 
 
