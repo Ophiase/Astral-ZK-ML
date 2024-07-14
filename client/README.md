@@ -8,6 +8,12 @@
 Required :
 - python3 : eel
 
+You have to adjust manually the RESSOURCE BOUND (not to low, not to high or the transaction will be rejected.)
+
+```
+RESSOURCE_BOUND_COMMON = ResourceBounds(59806, 342990458309864)
+```
+
 ### Fill the following files (create them if necessary) :
 
 ``data/contract_info.json``

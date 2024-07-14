@@ -6,7 +6,7 @@ pub trait ICountryWiseContract<TContractState> {
     // USER SIDE
     // ---------------
 
-    fn predict(ref self: TContractState, inputs: Matrix, for_storage: bool) -> Matrix;
+    fn predict(ref self: TContractState, inputs: Span<Span<felt252>>, for_storage: bool) -> Span<Span<felt252>>;
 
     // VALIDATOR SIDE
     // ---------------
@@ -338,7 +338,9 @@ pub mod CountryWiseContract {
 
     #[abi(embed_v0)]
     impl ContractImpl of super::ICountryWiseContract<ContractState> {
-        fn predict(ref self: ContractState, inputs: Matrix, for_storage: bool) -> Matrix {
+        fn predict(ref self: ContractState, inputs: Span<Span<felt252>>, for_storage: bool) -> Span<Span<felt252>> {
+            let matrix = MatrixBasics::from_raw_felt(@inputs);
+            
             if for_storage {
                 match find_validator_index(@self, @get_caller_address()) {
                     Option::Some(_idx) => panic!("not implemented yet"),
@@ -347,7 +349,7 @@ pub mod CountryWiseContract {
             }
 
             let mut model = read_model(@self);
-            model.forward(@inputs)
+            model.forward(@matrix).as_felt()
         }
 
         fn evaluate_stored_prediction(

@@ -71,12 +71,14 @@ fn check_contract() -> () {
 
     let rawY = array![array![594980, 189485, 215514,].span(), array![594972, 189479, 215554,].span(), array![594971, 189486, 215556,].span(), array![594975, 189493, 215535,].span(), array![594972, 189480, 215554,].span(),].span();
 
-    let X = MatrixBasics::from_raw_felt(@rawX);
+    // let X = MatrixBasics::from_raw_felt(@rawX);
     let Y = MatrixBasics::from_raw_felt(@rawY);
 
     // -------------------------------------------------------------------
 
-    let result = dispatcher.predict(X, false);
+    let result = MatrixBasics::from_raw_felt(
+        @dispatcher.predict(rawX, false)
+    );
     println!("result : \n{result}");
     println!("wanted : \n{Y}");
  

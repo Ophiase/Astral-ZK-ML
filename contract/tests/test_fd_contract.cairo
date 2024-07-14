@@ -36,7 +36,7 @@ fn deploy_contract() -> IFullyDecentralizedContractDispatcher {
 #[ignore]
 #[test]
 fn check_contract() -> () {
-    let dispatcher: IFullyDecentralizedContractDispatcher = deploy_contract();
+    let _dispatcher: IFullyDecentralizedContractDispatcher = deploy_contract();
 
     let _admin_0 = util_felt_addr('Akashi');
     let _admin_1 = util_felt_addr('Ozu');
@@ -44,19 +44,19 @@ fn check_contract() -> () {
 
     starknet::testing::set_contract_address(_admin_0);
 
-    // -------------------------------------------------------------------
+//     // -------------------------------------------------------------------
 
-    let rawX = array![].span();
-    let rawY = array![].span();
+//     let rawX = array![].span();
+//     let rawY = array![].span();
 
-    let X = MatrixBasics::from_raw_felt(@rawX);
-    let Y = MatrixBasics::from_raw_felt(@rawY);
+//     let X = MatrixBasics::from_raw_felt(@rawX);
+//     let Y = MatrixBasics::from_raw_felt(@rawY);
 
-    // -------------------------------------------------------------------
+//     // -------------------------------------------------------------------
 
-    let result = dispatcher.predict(X, false);
-    println!("result : \n{result}");
-    println!("wanted : \n{Y}");
-// -------------------------------------------------------------------
+//     let result = dispatcher.predict(rawX, false);
+//     println!("result : \n{result}");
+//     println!("wanted : \n{Y}");
+// // -------------------------------------------------------------------
 
 }
