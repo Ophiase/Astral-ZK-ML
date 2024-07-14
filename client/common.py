@@ -23,7 +23,7 @@ class GlobalState:
         self.private_keys = None
 
         self.validator_accounts = None
-        self.bot_accounts = None
+        self.bot_account = None
         self.default_contract = None
 
         self.train_X = None

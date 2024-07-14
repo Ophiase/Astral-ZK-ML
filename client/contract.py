@@ -120,7 +120,7 @@ def call_generic(function_name : str) :
 # ADD PREDICTION INVOKE
 
 def invoke_predict(prediction: np.array, debug=False) :
-    account = globalState.bot_accounts
+    account = globalState.bot_account
 
     contract = asyncio.run(
         Contract.from_address(
