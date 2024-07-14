@@ -1,0 +1,192 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #d9d2cc;
+}
+
+#plots-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.active-plot {
+    background: #eae5e0;
+    border: 4px solid #ff00cb;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.plot {
+    background: #eae5e0;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.page-title {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #353535;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.bot-container {
+    background: #c8bdb0;
+    border: 1px solid #292c31;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    height: auto;
+}
+
+.bot-container h2 {
+    font-size: 20px;
+    color: #312f2f;
+    text-align: center;
+}
+
+.bot-container h3 {
+    font-size: 16px;
+    color: #241d1d;
+    /* text-align: center; */
+}
+
+.console, .console-short, .console-mid {
+    border: 1px solid #ccc;
+    background-color: #dfd6cb;
+    font-family: monospace;
+    padding: 10px;
+}
+
+.console {
+    height: 340px;
+    overflow-y: auto;
+}
+
+.console-mid {
+    height: 150px;
+    overflow-y: auto;
+}
+
+.console-short {
+    height: 120px;
+    overflow-y: auto;
+}
+
+#console-input {
+    border: 0px solid #ccc;
+    border-color: #272a31;
+    padding: 10px;
+    width: 480px;
+    overflow-y: auto;
+    background-color: #dbd3c3;
+    font-family: monospace;
+}
+
+.btn {
+    background-color: #7a8684;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background-color: #366d7a;
+}
+
+#progress-text-1, #progress-text-2, #progress-text-3 {
+    color: white;
+}
+
+.content-wrapper {
+    display: flex;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.left-content, .right-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.left-content {
+    padding-right: 10px;
+    border-right: 1px solid #ccc;
+}
+
+.right-content {
+    padding-left: 10px;
+}
+
+#oracle-management-menu{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    /* background-color: rgba(144, 146, 114, 0.5); */
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+#oracle-menu-content {
+    background-color: #e2ddcf;
+    padding: 20px;
+    border-radius: 10px;
+    border-color: #241d1d;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.form-group p {
+    margin: 0;
+    margin-right: 10px;
+    width: 150px; /* Adjust the width as needed */
+}
+.form-group select,
+.form-group input {
+    flex-grow: 1;
+}
+
+.argument-text {
+    font-size: 15px;
+}

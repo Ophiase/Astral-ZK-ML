@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astral ZKML</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="title-container">
+        <h1 class="page-title">Astral - ZKML</h1>
+    </div>
+
+
+    <br>
+    <br>
+
+    <div>
+        <div id="plots-container" class="a"></div>
+    </div>
+
+    <div class="container">
+        <div class="bot-container">
+            <h2>Simulation</h2>
+            <button class="btn" onclick="query('fetch')">Fetch Data</button>
+            <button class="btn" onclick="query('commit')">Commit Predictions</button>
+            <h3>Simulation data :</h3>
+            <div id="simulation-output" class="console-mid">
+                Nothing, please fetch.
+            </div>
+        </div>
+        
+        <div class="bot-container">
+            <h2>Console</h2>
+            <div id="console-output" class="console">
+                
+            </div>
+            <input id="console-input" type="text" autofocus>
+        </div>
+        
+        <div class="bot-container">
+            <h2>On-Chain State (Sepolia)</h2>
+            <div class="content-wrapper">
+                <div class="left-content">
+                    <h3>Something</h3>
+                    <canvas id="progress-bar-2" width="400" height="90"></canvas>
+                    <div id="progress-text-2"></div>
+                    <h3>Something</h3>
+                    <canvas id="progress-bar-1" width="400" height="90"></canvas>
+                    <div id="progress-text-1"></div>
+                    
+                </div>
+                <div class="right-content">
+                    <button class="btn" onclick="query('resume')">Resume</button>
+                    <button class="btn" onclick="query('validators_list')">Validators</button>
+                </div>
+            </div>
+
+            <div id="sepolia_infos" class="console-short">
+                Nothing, please query a Sepolia Resume.
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/sepolia_graphics.js"></script>
+</body>
+</html>
