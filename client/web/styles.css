@@ -126,7 +126,7 @@ canvas {
     padding-left: 10px;
 }
 
-#oracle-management-menu{
+#management-menu{
     display: none;
     position: fixed;
     width: 100%;
@@ -137,7 +137,7 @@ canvas {
     align-items: center;
 }
 
-#oracle-menu-content {
+#menu-content {
     background-color: #e2ddcf;
     padding: 20px;
     border-radius: 10px;

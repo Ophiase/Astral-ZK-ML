@@ -1,7 +1,7 @@
 import_contracts:
 	rm -rf contracts
 	mkdir contracts 
-	cp -r ../oracle_contract/target/dev/* contracts
+	cp -r ../contract/target/dev/* contracts
 
 run:
 	python3 main.py

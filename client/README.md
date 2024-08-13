@@ -25,7 +25,7 @@ RESSOURCE_BOUND_COMMON = ResourceBounds(59806, 342990458309864)
 }
 ```
 
-Declaration/Deployment explained in [contract/README.md](oracle_contract/README.md)
+Declaration/Deployment explained in [contract/README.md](/contract/README.md)
 
 ``data/sepolia.json``
 ```json
