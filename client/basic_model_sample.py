@@ -24,6 +24,8 @@ class ILayer:
 
     def serialize(self) -> str: return ""
 
+# ----------------------------------------------------------------------------------------------------------------
+
 class DenseLayer(ILayer):
     def __init__(self, input_shape: int = None, output_shape: int = None, activation: str = None) -> None:
         self.input_shape = input_shape

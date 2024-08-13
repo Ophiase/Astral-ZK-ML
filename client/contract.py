@@ -28,10 +28,10 @@ from basic_conversions import wfloat, wfloat_to_float, to_hex, from_hex
 
 ACCOUNTS_PATH = os.path.join("data", "sepolia.json")
 
-RESSOURCE_BOUND_COMMON = ResourceBounds(59806, 342990458309864)
-RESOURCE_BOUND_UPDATE_PREDICTION = RESSOURCE_BOUND_COMMON
-RESOURCE_BOUND_UPDATE_PROPOSITION = RESSOURCE_BOUND_COMMON
-RESOURCE_BOUND_VOTE_FOR_A_PREDICTION = RESSOURCE_BOUND_COMMON
+RESOURCE_BOUND_COMMON = ResourceBounds(59806, 1042990458309864)
+RESOURCE_BOUND_UPDATE_PREDICTION = RESOURCE_BOUND_COMMON
+RESOURCE_BOUND_UPDATE_PROPOSITION = RESOURCE_BOUND_COMMON
+RESOURCE_BOUND_VOTE_FOR_A_PREDICTION = RESOURCE_BOUND_COMMON
 
 def retrieve_account_data() -> None:
     with open(ACCOUNTS_PATH, 'r') as file:
@@ -143,7 +143,9 @@ def invoke_predict(prediction: np.array, debug=False) :
         )
     )
 
+    res = result
+
     eel.writeToConsole("Succeed")
     eel.setSepoliaConsole(
-        f"Onchain result:\n{result}"
+        f"Onchain result:\n{res}"
     )

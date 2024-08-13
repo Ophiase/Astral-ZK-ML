@@ -97,7 +97,7 @@ pub mod ml;
 - Personal notes
     - I should replace MSE with CategoricalCrossEntropy if I have time for most examples.
     - I lost half of the Hackathon thinking I introduced a bug (loss at 0.17 is not that high, but I hoped for a better loss considering MSE loss is not very reliable over Categorical predictions), the two used datasets are just hard to exploit
-        - Proof: I get the same Loss from Keras and my model from scratch in ``/contract/draft/on_data_2.ipynb``
+        - Proof: I get the same Loss from Keras and my model from scratch in ``/contract/draft/test_dataset_2.ipynb``
         - The Sequential in Cairo is a direct translation from the pythonic version in ``/contracts/draft/basic_model_sample.py``
         - Proof of integrity of the cairo version in : ``/contract/tests/test_cw_contract.cairo``
 

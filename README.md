@@ -2,10 +2,12 @@
 
 <p align="center"><img src="resources/logo.png" width=400></p>
 
-Sponsorized by ETH Bruxelles Contest ⚡️
+Sponsorized by [ETH Global - Brussels](https://ethglobal.com/events/brussels). \
+Prize : **Nethermind** - Best zkML project
 
 Decentralized Machine Learning Protocol adapted to both terrestrial and spatial context. \
-The models and the two smartcontracts utilizing them are written in the ZK-Proovable language Cairo.
+The models and the two smartcontracts utilizing them are written in the ZK-Proovable language Cairo. \
+In the future, the smart contracts will be deployed on specific L3 for each planets/asteroids using Madara.
 
 ## Introduction
 
@@ -23,12 +25,12 @@ The models and the two smartcontracts utilizing them are written in the ZK-Proov
 			- eg: Crater identification
 		- Graph Attention Network
 			- eg: Constellation identification
-- ✅ **Decentralized Smart Contracts** : Variants of the smart contract :
-	- **Fully Decentralized**
+- **Decentralized Smart Contracts** : Variants of the smart contract :
+	- **Fully Decentralized** (not implemented yet)
 		- <p align="center"><img src="./resources/schema_fully_decentralized.png" width=700></p>
 		- Based on financial incentive (ie. egoistic incentive)
 		- Terestrial variant adapted to Starknet L2.
-	- **Country Wise Decentralized**
+	- **Country Wise Decentralized** (not implemented yet)
 		- <p align="center"><img src="./resources/schema_country_wise_decentralized.png" width=8700></p>
 		- Assumed resistance to Byzantine fault
 		- Spacial variant adapted to a specific L3 for a planet/satellite owned by multiples countries.
@@ -37,7 +39,6 @@ The models and the two smartcontracts utilizing them are written in the ZK-Proov
 
 ## Documentation
 
-- ### [Demonstration Client](client/README.md)
 - ### [On Chain content](contract/README.md) 
     - ZK-ML tools 
     - Fully Decentralized contract
@@ -46,3 +47,4 @@ The models and the two smartcontracts utilizing them are written in the ZK-Proov
     - Mathematical model/assumptions
     - Algorithms
     - Misc
+- ### [Demonstration Client](client/README.md)

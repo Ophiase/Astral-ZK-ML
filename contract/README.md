@@ -9,7 +9,7 @@
                 - [Stellar-classification](https://www.kaggle.com/datasets/fedesoriano/stellar-classification-dataset-sdss17/data)
                 - [Star-classification](https://www.kaggle.com/datasets/deepu1109/star-dataset)
     - ❌ Convolutional Neural Network
-        - Requires to implements the following layers
+        - Requires to implement the following layers
             - Flatten, Conv2D, MaxPooling
         - Add the following examples :
             - Crater identification (availible datasets on kaggle)
@@ -21,7 +21,7 @@
                 - Requires a first model to extrapolate stars positions and size.
                 - Normalized graph labeled with distances and star sizes.
 - ## Fully Decentralized Contract
-    - Can do predictions.
+    - Able to do predictions.
     - ❌ Minimal implementation for the demo
 
 ## Installation
