@@ -49,18 +49,18 @@ pub impl I128SignedBasics of ISignedBasics<i128> {
     }
 }
 
-pub impl I128Div of Div<i128> {
-    fn div(lhs: i128, rhs: i128) -> i128 {
-        let unsigned_div = unsigned_to_signed(@(lhs.as_unsigned() / rhs.as_unsigned()));
-        let positive = lhs.is_positive() == rhs.is_positive();
+// pub impl I128Div of Div<i128> {
+//     fn div(lhs: i128, rhs: i128) -> i128 {
+//         let unsigned_div = unsigned_to_signed(@(lhs.as_unsigned() / rhs.as_unsigned()));
+//         let positive = lhs.is_positive() == rhs.is_positive();
 
-        if positive {
-            unsigned_div
-        } else {
-            unsigned_div * -1_i128
-        }
-    }
-}
+//         if positive {
+//             unsigned_div
+//         } else {
+//             unsigned_div * -1_i128
+//         }
+//     }
+// }
 
 pub impl I128Display of Display<i128> {
     fn fmt(self: @i128, ref f: Formatter) -> Result<(), Error> {

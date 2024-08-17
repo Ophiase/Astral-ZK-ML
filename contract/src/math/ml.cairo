@@ -180,7 +180,7 @@ pub impl DenseLayerBasics of IDenseLayerBasics {
     }
 
     fn add(output_shape: usize, activation_function: ActivationFunction,) -> DenseLayer {
-        DenseLayerBasics::init(Option::None, output_shape, activation_function, Option::None)
+        Self::init(Option::None, output_shape, activation_function, Option::None)
     }
 }
 
@@ -338,7 +338,7 @@ pub impl SequentialBasics of ISequentialBasics {
             }
         };
 
-        self.layers = SequentialBasics::_reverse_layers(result).span();
+        self.layers = Self::_reverse_layers(result).span();
     }
 
     fn train_epoch(ref self: Sequential, X: @Matrix, y: @Matrix, batch_size: Option<usize>) -> () {

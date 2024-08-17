@@ -6,7 +6,7 @@ use core::traits::TryInto;
 use core::fmt::{Display, Formatter, Error};
 
 use super::signed::{
-    ISignedBasics, I128SignedBasics, unsigned_to_signed, felt_to_i128, I128Div, I128Display,
+    ISignedBasics, I128SignedBasics, unsigned_to_signed, felt_to_i128, I128Display,
 };
 
 use super::wfloat::{
@@ -215,12 +215,12 @@ pub impl VectorBasics of IVectorBasics {
 
     #[inline]
     fn ones(size: usize) -> Vector {
-        VectorBasics::fill(size, @ONE_WFLOAT)
+        Self::fill(size, @ONE_WFLOAT)
     }
 
     #[inline]
     fn zeros(size: usize) -> Vector {
-        VectorBasics::fill(size, @ZERO_WFLOAT)
+        Self::fill(size, @ZERO_WFLOAT)
     }
 
     // build a vector with a 1 at ith position : (0, ... 0, 1, 0, ... 0)
@@ -318,7 +318,7 @@ pub impl VectorBasics of IVectorBasics {
     }
 
     fn from_raw_felt(values: @Span<felt252>) -> Vector {
-        VectorBasics::from_lambda(values, RawFeltAsWFloat {})
+        Self::from_lambda(values, RawFeltAsWFloat {})
     }
 
     // TODO:
@@ -328,17 +328,17 @@ pub impl VectorBasics of IVectorBasics {
 
     #[inline]
     fn from_raw_i128(values: @Span<i128>) -> Vector {
-        VectorBasics::from_lambda(values, RawI128AsWFloat {})
+        Self::from_lambda(values, RawI128AsWFloat {})
     }
 
     #[inline]
     fn from_i128(values: @Span<i128>) -> Vector {
-        VectorBasics::from_lambda(values, I128AsWFloat {})
+        Self::from_lambda(values, I128AsWFloat {})
     }
 
     #[inline]
     fn from_u128(values: @Span<u128>) -> Vector {
-        VectorBasics::from_lambda(values, U128AsWFloat {})
+        Self::from_lambda(values, U128AsWFloat {})
     }
 
     #[inline]

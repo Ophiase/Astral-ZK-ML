@@ -1,7 +1,7 @@
 use astral_zkml::math::ml::ISequentialBasics;
 use astral_zkml::math;
 use astral_zkml::math::signed::{
-    I128SignedBasics, unsigned_to_signed, felt_to_i128, I128Div, I128Display,
+    I128SignedBasics, unsigned_to_signed, felt_to_i128, I128Display,
 };
 use astral_zkml::math::wfloat::{
     WFloat, WFloatBasics, ZERO_WFLOAT, ONE_WFLOAT, NEG_WFLOAT, HALF_WFLOAT, DECIMAL_WFLOAT,

@@ -8,7 +8,7 @@ use core::traits::TryInto;
 use core::fmt::{Display, Formatter, Error};
 
 use super::signed::{
-    ISignedBasics, I128SignedBasics, unsigned_to_signed, felt_to_i128, I128Div, I128Display,
+    ISignedBasics, I128SignedBasics, unsigned_to_signed, felt_to_i128, I128Display,
 };
 use super::wfloat::{
     WFloat, WFloatBasics, ZERO_WFLOAT, ONE_WFLOAT, NEG_WFLOAT, HALF_WFLOAT, DECIMAL_WFLOAT,
@@ -187,12 +187,12 @@ pub impl MatrixBasics of IMatrixBasics {
 
     #[inline]
     fn ones(shape: (usize, usize)) -> Matrix {
-        MatrixBasics::fill(shape, @ONE_WFLOAT)
+        Self::fill(shape, @ONE_WFLOAT)
     }
 
     #[inline]
     fn zeros(shape: (usize, usize)) -> Matrix {
-        MatrixBasics::fill(shape, @ZERO_WFLOAT)
+        Self::fill(shape, @ZERO_WFLOAT)
     }
 
     fn identity(shape: (usize, usize)) -> Matrix {
@@ -332,7 +332,7 @@ pub impl MatrixBasics of IMatrixBasics {
     }
 
     fn from_line_vector(vector: @Vector) -> Matrix {
-        MatrixBasics::from_row_vector(vector).transpose()
+        Self::from_row_vector(vector).transpose()
     }
 
     // Returns the first basis
@@ -341,7 +341,7 @@ pub impl MatrixBasics of IMatrixBasics {
     }
 
     fn from_raw_felt(values: @Span<Span<felt252>>) -> Matrix {
-        MatrixBasics::from_lambda(values, RawFeltAsWFloat {})
+        Self::from_lambda(values, RawFeltAsWFloat {})
     }
 
     // TODO:
@@ -351,17 +351,17 @@ pub impl MatrixBasics of IMatrixBasics {
 
     #[inline]
     fn from_raw_i128(values: @Span<Span<i128>>) -> Matrix {
-        MatrixBasics::from_lambda(values, RawI128AsWFloat {})
+        Self::from_lambda(values, RawI128AsWFloat {})
     }
 
     #[inline]
     fn from_i128(values: @Span<Span<i128>>) -> Matrix {
-        MatrixBasics::from_lambda(values, I128AsWFloat {})
+        Self::from_lambda(values, I128AsWFloat {})
     }
 
     #[inline]
     fn from_u128(values: @Span<Span<u128>>) -> Matrix {
-        MatrixBasics::from_lambda(values, U128AsWFloat {})
+        Self::from_lambda(values, U128AsWFloat {})
     }
 
     #[inline]

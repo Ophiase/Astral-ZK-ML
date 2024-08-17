@@ -5,7 +5,7 @@ use core::traits::TryInto;
 use core::fmt::{Display, Formatter, Error};
 
 use super::signed::{
-    ISignedBasics, I128SignedBasics, unsigned_to_signed, felt_to_i128, I128Div, I128Display,
+    ISignedBasics, I128SignedBasics, unsigned_to_signed, felt_to_i128, I128Display,
 };
 
 use super::algebra::{NeutralElement, Invertible, pow, pow_group, pow_monoid};
