@@ -12,7 +12,7 @@ In the future, the smart contracts will be deployed on specific L3 for each plan
 ## Introduction
 
 - ✅ **ZK-ML tools** : Built in Cairo for contracts on starknet-compatible blockchain
-	- Implemented
+	- ✅ Implemented on blockchain
 		- Basic Algebra + Linear Algebra
 			- Principal types: Signed Integer, Float (WFloat), Vector, Matrix
 			- Numerous High level operations to manipulate those types.
@@ -20,22 +20,25 @@ In the future, the smart contracts will be deployed on specific L3 for each plan
 				- TODO: add more distributions (normal, poisson, $\dots$)
 		- Multi Layer Perceptron (ie. regular Neural Network)
 			- eg: Star type identification
-	- Not Implemented Yet
+	- ✅ Proof of Concept
+		- Crater identification (Computer Vision)
+		- Constellation identification (Computer Vision)
+	- ❌ Not implemented in cairo yet
 		- Convolutional Neural Network
-			- eg: Crater identification
+			- for Crater identification
 		- Graph Attention Network
-			- eg: Constellation identification
+			- for Constellation identification
 - **Decentralized Smart Contracts** : Variants of the smart contract :
-	- **Fully Decentralized** (not implemented yet)
+	- ❌ **Fully Decentralized** (not implemented yet)
 		- <p align="center"><img src="./resources/schema_fully_decentralized.png" width=700></p>
 		- Based on financial incentive (ie. egoistic incentive)
 		- Terestrial variant adapted to Starknet L2.
-	- **Country Wise Decentralized** (not implemented yet)
+	- ❌ **Country Wise Decentralized** (not implemented yet)
 		- <p align="center"><img src="./resources/schema_country_wise_decentralized.png" width=8700></p>
 		- Assumed resistance to Byzantine fault
 		- Spacial variant adapted to a specific L3 for a planet/satellite owned by multiples countries.
-- ✅ **Demonstration Client**
-    - TODO
+- **Demonstration Client**
+    - ❌ Not implemented yet
 
 ## Documentation
 
@@ -48,3 +51,6 @@ In the future, the smart contracts will be deployed on specific L3 for each plan
     - Algorithms
     - Misc
 - ### [Demonstration Client](client/README.md)
+- ### Proof Of Concept
+	- [Crater Identification](poc/crater_identification/README.md)
+	- [Constellation Identification](poc/constellation_identification/README.md)
