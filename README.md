@@ -20,7 +20,7 @@ In the future, the smart contracts will be deployed on specific L3 for each plan
 				- TODO: add more distributions (normal, poisson, $\dots$)
 		- Multi Layer Perceptron (ie. regular Neural Network)
 			- eg: Star type identification
-	- ✅ Proof of Concept
+	- ❌ Additional Proof of Concept
 		- Crater identification (Computer Vision)
 		- Constellation identification (Computer Vision)
 	- ❌ Not implemented in cairo yet
