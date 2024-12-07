@@ -11,7 +11,7 @@ In the future, the smart contracts will be deployed on specific L3 for each plan
 
 ## Introduction
 
-- ✅ **ZK-ML tools** : Built in Cairo for contracts on starknet-compatible blockchain
+- ✅ **ZK-ML tools** : Built in Cairo 2.6.4 for contracts on starknet-compatible blockchain
 	- ✅ Implemented on blockchain
 		- Basic Algebra + Linear Algebra
 			- Principal types: Signed Integer, Float (WFloat), Vector, Matrix
@@ -20,14 +20,15 @@ In the future, the smart contracts will be deployed on specific L3 for each plan
 				- TODO: add more distributions (normal, poisson, $\dots$)
 		- Multi Layer Perceptron (ie. regular Neural Network)
 			- eg: Star type identification
-	- ❌ Additional Proof of Concept
-		- Crater identification (Computer Vision)
-		- Constellation identification (Computer Vision)
 	- ❌ Not implemented in cairo yet
 		- Convolutional Neural Network
 			- for Crater identification
 		- Graph Attention Network
 			- for Constellation identification
+- ❌ Additional proof of concept for tasks assigned to spatial decentralized robots
+	- Crater identification (Computer Vision)
+	- Constellation identification (Computer Vision)
+	- [Microorganism analysis](https://github.com/Ophiase/Microorganism-Computer-Vision) (Computer Vision)
 - **Decentralized Smart Contracts** : Variants of the smart contract :
 	- ❌ **Fully Decentralized** (not implemented yet)
 		- <p align="center"><img src="./resources/schema_fully_decentralized.png" width=700></p>
