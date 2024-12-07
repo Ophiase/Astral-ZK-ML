@@ -1,6 +1,7 @@
 import eel
 import time
 from threading import Thread
+from client.basic_conversions import to_hex
 from common import globalState
 from simulation_data import sample
 # from basic_model_sample import
