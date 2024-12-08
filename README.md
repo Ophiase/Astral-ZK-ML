@@ -55,3 +55,4 @@ In the future, the smart contracts will be deployed on specific L3 for each plan
 - ### Proof Of Concept
 	- [Crater Identification](poc/crater_identification/README.md)
 	- [Constellation Identification](poc/constellation_identification/README.md)
+ 	- [Microorganism analysis](https://github.com/Ophiase/Microorganism-Computer-Vision)
