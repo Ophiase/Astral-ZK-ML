@@ -1,4 +1,7 @@
+from turtle import pd
+from typing import Tuple
 import numpy as np
+import pandas as pd
 from constants import ANGLE_RANGE
 
 def generate_camera_angles(num_angles=1):
