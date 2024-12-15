@@ -13,3 +13,6 @@ TRAINING_GRAPHS_DIR = os.path.join("data", "sample")
 FOV_U = math.radians(30.0)  # Field of view width in degrees
 FOV_V = math.radians(15.0)  # Field of view height in degrees
 MAX_ANGLE = np.pi
+
+INTENSITY_NOISE = 0.1
+LOCATION_NOISE  = math.radians(3)

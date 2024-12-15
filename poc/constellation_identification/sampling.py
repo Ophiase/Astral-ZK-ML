@@ -5,14 +5,14 @@ from typing import Tuple, List
 
 from constants import FOV_U, FOV_V, MAX_ANGLE, NUM_SAMPLES, STAR_DATA_FILE, TRAINING_GRAPHS_DIR
 
-def sample_visible_stars(star_data: pd.DataFrame, fov_u: float, fov_v: float) -> Tuple[np.ndarray, np.ndarray]:
+def sample_visible_stars(star_data: pd.DataFrame, fov_u: float, fov_v: float) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Sample stars visible within a random camera field of view (FOV).
 
     :param star_data: DataFrame with star positions and intensities
     :param fov_u: Field of view in the u direction (angular width)
     :param fov_v: Field of view in the v direction (angular height)
-    :return: Tuple containing visible star data and the camera center (u, v)
+    :return: Tuple containing visible star data, the camera center (u, v), and relative positions
     """
     center_u = np.random.uniform(-MAX_ANGLE + fov_u / 2, MAX_ANGLE - fov_u / 2)
     center_v = np.random.uniform(-MAX_ANGLE + fov_v / 2, MAX_ANGLE - fov_v / 2)
@@ -25,8 +25,9 @@ def sample_visible_stars(star_data: pd.DataFrame, fov_u: float, fov_v: float) ->
     )
 
     visible_stars = star_data[mask]
+    relative_positions = visible_stars[['u', 'v']].to_numpy() - [center_u - fov_u / 2, center_v - fov_v / 2]
 
-    return visible_stars.to_numpy(), np.array([center_u, center_v])
+    return visible_stars.to_numpy(), np.array([center_u, center_v]), relative_positions
 
 def compute_angular_distances(positions: np.ndarray) -> np.ndarray:
     """
@@ -45,13 +46,25 @@ def compute_angular_distances(positions: np.ndarray) -> np.ndarray:
                                           (positions[i, 1] - positions[j, 1])**2)
     return distances
 
-def save_graph_sample(graph_sample: dict, sample_id: int, output_dir: str) -> None:
+def save_graph_sample(
+    graph_sample: dict, 
+    ground_truth: dict, 
+    sample_id: int, 
+    output_dir: str
+) -> None:
     os.makedirs(output_dir, exist_ok=True)
+
     np.savez(
-        os.path.join(output_dir, f"sample_{sample_id}.npz"),
+        os.path.join(output_dir, f"sample_{sample_id}_x.npz"),
         distances=graph_sample['distances'],
         intensities=graph_sample['intensities'],
-        camera_center=graph_sample['camera_center']
+        relative_positions=graph_sample['relative_positions']
+    )
+
+    np.savez(
+        os.path.join(output_dir, f"sample_{sample_id}_y.npz"),
+        true_positions=ground_truth['true_positions'],
+        camera_center=ground_truth['camera_center']
     )
 
 def generate_training_graphs_per_file(
@@ -65,7 +78,7 @@ def generate_training_graphs_per_file(
     star_data = pd.read_csv(star_data_file)
 
     for i in range(num_samples):
-        visible_stars, camera_center = sample_visible_stars(star_data, fov_u, fov_v)
+        visible_stars, camera_center, relative_positions = sample_visible_stars(star_data, fov_u, fov_v)
         positions = visible_stars[:, :2]
         intensities = visible_stars[:, 2]
 
@@ -78,6 +91,10 @@ def generate_training_graphs_per_file(
             {
                 'distances': distances,
                 'intensities': intensities,
+                'relative_positions': relative_positions
+            },
+            {
+                'true_positions': positions,
                 'camera_center': camera_center
             },
             sample_id=i,
@@ -97,5 +114,5 @@ def keep_k_closest(distances: np.ndarray, k: int) -> np.ndarray:
 def main():
     generate_training_graphs_per_file(STAR_DATA_FILE, FOV_U, FOV_V, NUM_SAMPLES, TRAINING_GRAPHS_DIR)
 
-if __name__ == "__main__" :
+if __name__ == "__main__":
     main()
