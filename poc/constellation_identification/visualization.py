@@ -1,6 +1,10 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch_geometric.loader import DataLoader
 
 from constants import TRAINING_GRAPHS_DIR
 
@@ -65,6 +69,34 @@ def visualize_sample(sample_id: int, data_dir: str):
     plt.legend()
     plt.grid(True)
     plt.show()
+
+def visualize_predictions(model: nn.Module, dataloader: DataLoader, device: torch.device, sample_idx: int = 0, verbose: bool=True) -> None:
+    model.eval()
+    with torch.no_grad():
+        data = next(iter(dataloader)).to(device)
+        data = data[sample_idx]
+       
+        if verbose:
+            print("DATA:")
+            print(data)
+
+        true_positions = data.y.cpu().numpy()
+        predicted_positions = model(data).cpu().numpy()
+        if verbose:
+            print("TRUTH:")
+            print(true_positions)
+            print("PREDICTED:")
+            print(predicted_positions)
+
+        plt.figure(figsize=(6, 6))
+        plt.scatter(true_positions[:, 0], true_positions[:, 1], color='red', marker='x', label='True Position')
+        plt.scatter(predicted_positions[:, 0], predicted_positions[:, 1], color='blue', marker='o', label='Predicted Position')
+        plt.title(f"True vs Predicted Star Positions (Sample 0)")
+        plt.xlabel("Position U")
+        plt.ylabel("Position V")
+        plt.legend()
+        plt.grid(True)
+        plt.show()
 
 def main():
     visualize_sample(2, TRAINING_GRAPHS_DIR)
